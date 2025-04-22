@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home page</title>
+    <link rel="stylesheet" href="css/root.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    
+    
+</head>
+<body>
+    <div class="main_home_page">
+        <div class="menu_div">
+            <%- include('partials/header'); -%>
+        </div>
+        <div class="content_conte">
+            <div class="div_tabelas">
+                <% if (message !="") { %>
+                    <section id="meuElemento" class=" <%= type  %>">
+                      <p><%= message  %></p>
+                    </section>
+                  <% } %>
+                    <legend>Filtros</legend>            
+                <div class="div_conteudo_tabela">
+                    
+                    <table class="tabela_documento">
+                        <thead>
+                          <tr>
+                            <th scope="col">Clientes</th>
+                            <th scope="col">Categoria </th>
+                            <th scope="col">Subcategoria </th>
+                            <th scope="col">Usuario </th>
+                            <th scope="col">Açoes</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+
+                            <% Estrutura.forEach(estrutura => { %>
+                                <% if (estrutura.categoria && estrutura.categoria.length > 0) { %>
+                                  <% estrutura.categoria.forEach(categoria => { %>
+                                    <% if (categoria.subcategoria && categoria.subcategoria.length > 0) { %>
+                                      <% categoria.subcategoria.forEach(sub => { %>
+                                        <tr>
+                                          <td><%= estrutura.cliente %></td>
+                                          <td><%= categoria.categoria %></td>
+                                          <td><%= sub.subcategoria %></td>
+                                          <td><%= estrutura.User?.nome || 'Desconhecido' %></td>
+                                          <td class="divs_btn_tabela">
+                                            <a class="btn_table_green" href="/editar/<%= sub.id %>">Editar</a>
+                                            <a class="btn_table_red" href="/deletar/<%= sub.id %>">Deletar</a>
+                                          </td>
+                                        </tr>
+                                      <% }) %>
+                                    <% } else { %>
+                                      <tr>
+                                        <td><%= estrutura.cliente %></td>
+                                        <td><%= categoria.categoria %></td>
+                                        <td><em>Sem subcategoria</em></td>
+                                        <td><%= estrutura.User?.nome || 'Desconhecido' %></td>
+                                        <td class="divs_btn_tabela">-</td>
+                                      </tr>
+                                    <% } %>
+                                  <% }) %>
+                                <% } else { %>
+                                  <tr>
+                                    <td><%= estrutura.cliente %></td>
+                                    <td><em>Sem categoria</em></td>
+                                    <td><em>Sem subcategoria</em></td>
+                                    <td><%= estrutura.User?.nome || 'Desconhecido' %></td>
+                                    <td class="divs_btn_tabela">-</td>
+                                  </tr>
+                                <% } %>
+                              <% }); %>
+                              
+                                    
+                        </tbody>
+                    </table>
+
+                </div>
+                
+            </div>
+        
+        </div>
+    </div>
+
+    <div class="meu_modal">
+        
+    </div>
+</body>
+
+<script src="js/automation.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+</html>

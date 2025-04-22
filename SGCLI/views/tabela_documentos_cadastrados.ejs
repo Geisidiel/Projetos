@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home page</title>
+    <link rel="stylesheet" href="css/root.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    
+    
+</head>
+<body>
+    <div class="main_home_page">
+        <div class="menu_div">
+            <%- include('partials/header'); -%>
+        </div>
+        <div class="content_conte">
+            <div class="div_tabelas">
+                <% if (message !="") { %>
+                    <section id="meuElemento" class=" <%= type  %>">
+                      <p><%= message  %></p>
+                    </section>
+                  <% } %>
+            
+                <div class="div_conteudo_tabela">
+                    <fieldset>
+                        <legend>Filtros</legend>
+                        <div class="div_btns_tabela_documento">
+                            <div class="div_iten_forms">
+                                <label for="">Cliente:</label>
+                                <select name="clienteId" id="select1">
+                                    <option value="">Selecione</option>
+                                    <% Cl.forEach(cliente => { %>
+                                        <option value="<%=cliente.id %>"><%= cliente.cliente %></option>
+                                    <% }); %>
+                                </select>
+                            </div>
+                            
+                            <div class="div_iten_forms">
+                                <label for="">Categoria:</label>
+                                <select name="categoriaId" id="select2">
+                                    <option value="">Selecione</option>
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                            <div class="div_iten_forms">
+                                <label for="">Subcategoria:</label>
+                                <select name="subcategoriaId" id="select3">
+                                    <option value="">Selecione</option>
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                            <div class="div_iten_forms">
+                                <label for="">Lote:</label>
+                                <select name="lote" >
+                                    <option value="">Selecione</option>
+                                    <% Lt.forEach(lote => { %>
+                                        <option value="<%=lote.n_lote %>"><%= lote.n_lote %></option>
+                                    <% }); %>
+                                </select>
+                            </div>
+                            
+                            <div class="div_iten_forms">
+                                <label for="">Tipo de documento:</label>
+                                <select id="meuSelect" name="tipodocumento" id="">
+                                    <option value="">Selecione</option>
+                                    <% Td.forEach(tipod => { %>
+                                        <option value="<%=tipod.tipodocumento %>"><%= tipod.tipodocumento %></option>
+                                    <% }); %>
+                                </select>
+                            </div>
+                            <div class="div_iten_forms">
+                                <label for="">Processo:</label>
+                                <input class="btn_process" id="meuInput" name="processo" type="text">
+                            </div>
+                        </div>
+                    </fieldset>
+                    <table class="tabela_documento">
+                        <thead>
+                          <tr>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Categoria</th>
+                            <th scope="col">Subcategoria</th>
+                            <th scope="col">Lote</th>
+                            <th scope="col">Documento</th>
+                            <th scope="col">Processo</th>
+                            <th scope="col">Volume</th>
+                            <th scope="col">User</th>
+                            <th scope="col">Açoes</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+
+                            <% Cdr.forEach(criardocumento => { %>
+                                <tr>
+                                    <td><%= criardocumento.cliente.cliente %></td>
+                                    <td><%= criardocumento.categorium.categoria %></td>
+                                    <td><%= criardocumento.subcategorium.subcategoria %></td>
+                                    <td><%= criardocumento.lote %></td>
+                                    <td><%= criardocumento.tipodocumento %></td>
+                                    <td><%= criardocumento.processo %></td>
+                                    <td><%= criardocumento.volume %></td>
+                                    <td><%= criardocumento.User.nome %></td>
+                                    <td class="divs_btn_tabela">
+                                        <a class="btn_table_green" href="/:<%= criardocumento.id %>">Editar</a>
+                                        <a class="btn_table_red" href="/:<%= criardocumento.id %>">Deletar</a>
+                                    </td>
+                                    
+                                </tr>
+                            <% }); %>
+
+                         
+                        </tbody>
+                    </table>
+
+                </div>
+                
+            </div>
+        
+        </div>
+    </div>
+
+    <div class="meu_modal">
+        
+    </div>
+</body>
+
+<script src="js/automation.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+</html>

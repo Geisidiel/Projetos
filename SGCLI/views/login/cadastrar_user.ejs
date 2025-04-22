@@ -1,0 +1,48 @@
+<div class="lg">
+  <div class="div_table_login_logon">
+
+    <link rel="stylesheet" href="css/style.css">
+      <link rel="stylesheet" href="css/root.css">
+    <div class="div_table_login ">
+    
+      
+      <fieldset>
+        <legend> Novo usuario:</legend>
+        <% if (message !="") { %>
+          <section id="meuElemento" class=" <%= type  %>">
+            <p><%= message  %></p>
+          </section>
+        <% } %>
+        <form action="/novousuario" method="post">
+
+          <div class="div_iten_forms">
+            <label for="">Nome:</label>
+            <input name="nome" type="text">
+          </div>
+          <div class="div_iten_forms">
+            <label for="">Sobrenome:</label>
+            <input name="sobrenome" type="text">
+          </div>
+
+          <div class="div_iten_forms">
+            <label for="">Cpf:</label>
+            <input name="cpf" type="text">
+          </div>
+          <div class="div_iten_forms">
+            <label for="">Senha:</label>
+            <input name="senha" type="password">
+          </div>
+          <div class="div_iten_forms">
+            <br>
+            <button class="btn_salvar_login" type="submit">Cadastrar</button>
+            <button class="btn_cancelar_login" ><a href="/login">Cancelar</a></button>
+            
+          </div>
+        </form>
+      </fieldset>
+      
+      
+  </div>
+  </div>
+</div>
+  <script src="js/automation.js"></script>

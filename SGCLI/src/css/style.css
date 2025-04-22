@@ -1,0 +1,343 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+
+}
+* >  input{
+  text-transform: uppercase;
+}
+.main_home_page{
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  margin: 0;
+
+}
+.menu_div{
+  width: 20%;
+  height: 100vh;
+  background-color: var(--bs-gray-700);
+}
+.content_conte{
+  width: 80%;
+  height: 100vh;
+  background-color: var(--bs-gray-200);
+}
+.meu_modal{
+  display: none;
+}
+.navbar{
+  width: 100%;
+  height: 100%;
+  padding: 1%;
+}
+.div_logo_link{
+  width: 100%;
+  height: 20%;
+  margin-top: 5%;
+
+}
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.sidebar {
+  background-color: var( --bs-gray-900);
+  color: var(-bs-white);
+  width: 100%;
+  height: 100%;
+  padding-top: 10%;
+  
+}
+
+.menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-item >  a {
+  display: block;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: var(--bs-white);
+  transition: background-color 0.3s ease;
+}
+.menu-item strong {
+  display: block;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: var(--bs-white);
+  transition: background-color 0.3s ease;
+}
+
+
+.menu-item > a:hover {
+  background-color: #444;
+}
+
+.menu-item > strong  >a {
+  color: var(--bs-white);
+}
+
+
+.has-submenu > a {
+  position: relative;
+}
+
+.has-submenu > a::after {
+  content: '\25BE'; /* Seta para baixo */
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8em;
+}
+
+.submenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: #444;
+  display: none; /* Inicialmente escondido */
+}
+
+.submenu li a {
+  display: block;
+  padding: 10px 30px;
+  text-decoration: none;
+  color: #ddd;
+  transition: background-color 0.3s ease;
+}
+
+.submenu li a:hover {
+  background-color: #666;
+}
+
+.submenu.active {
+  display: block;
+}
+
+.content {
+  flex-grow: 1;
+  padding: 20px;
+}
+.div_cadastrardocumento{
+  width: 95%;
+  height: 100 vh;
+  margin: auto;
+  margin-top: 3%;
+  position: relative;
+  
+}
+.fieldset_forms{
+  padding: 2%;
+  border-radius: 1%;
+}
+.div_iten_forms{
+  padding: 3px;
+  display: inline-block;
+  width: 100%;  
+  
+}
+.div_iten_forms >select{
+  width: 100%;
+  border-radius: 3px;
+}
+.div_iten_forms >textarea{
+  width: 100%;
+  border-radius: 3px;
+  text-transform:uppercase;
+
+}
+.div_iten_forms >input{
+  width: 100%;
+ height: 20px;
+}
+.forms_cadastrardoc{
+  padding: 1%;
+  display: flexbox;
+  width: 100%;
+  position: relative;
+}
+.forms_cadastrardoc > select{
+  border-radius: 3px;
+  width: 100%;
+  height: 30px ;
+  
+}
+.btn_salvar{
+  background-color: var(--bs-green);
+  height: 25px; 
+  border-radius: 3px;
+  color: var(--bs-white);
+  width: 10%;
+  border: transparent;
+}
+.btn_cancelar{
+  background-color: var(--bs-red);
+  height: 25px;
+  border-radius: 3px;
+  width: 10%;
+  border: transparent;
+}
+.btn_cancelar a{
+text-decoration: none;
+color: var(--bs-white);
+}
+.sucess{
+  color: var(--bs-green);
+}
+.danger{
+  color: var(--bs-red);
+}
+.div_tabelas{
+  margin: auto;
+  margin-top: 5%;
+  width: 98%;
+  height: 100v;
+  display: block;
+
+}
+.div_btns{
+  width: 100%;
+  display: flex;
+  
+}
+/* Estilo da tabela */
+.tabela_documento {
+  width: 100%;
+  border-collapse: collapse; /* Remove os espaços entre as células */
+  margin-top: 1%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para a tabela */
+}
+
+/* Estilo do cabeçalho da tabela */
+.tabela_documento  thead {
+  background-color: var(--bs-gray-900);
+  color: var(--bs-white);
+}
+
+.tabela_documento th {
+  padding: 1px;
+  text-align: left;
+  text-align: center;
+}
+
+/* Estilo das células */
+.tabela_documento td {
+  padding: 5px;
+  text-align: center;
+  border-bottom: 1px solid var(--bs-white);
+}
+.tabela_documento tr td{
+  font-size: 11px;
+}
+
+/* Estilo das linhas da tabela (alternando cores) */
+.tabela_documento  tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+/* Adicionando borda à tabela */
+.tabela_documento , .tabela_documento  th, .tabela_documento  td {
+  border: 1px solid #ddd;
+}
+.div_conteudo_tabela{
+  width: 100%;
+  height: 450px;
+  overflow: scroll;
+}
+.divs_btn_tabela{
+  width: 100%;
+  display: flex;
+  padding:5%;
+  gap: 5px; /* espaço entre os botões */
+  justify-content: center; /* opcional: centraliza os botões dentro da <td> */
+}
+
+.btn_tabela{
+  width: 100%;
+  padding: 1%;
+}
+.divs_btn_tabela > a{
+  text-decoration: none;
+  color: var(--bs-white);
+  padding: 3%;
+}
+.btn_table_green{
+  background-color: var(--bs-green);
+  border-radius: 6%;
+  border: none;
+  color: var(--bs-white);
+  padding: 5%;
+}
+.btn_table_red{
+  background-color: var(--bs-red);
+  border-radius: 6%;
+  border: none;
+  color: var(--bs-white);
+  padding: 5%;
+}
+.btn_table_red{
+  background-color: var(--bs-red);
+  border-radius: 6%;
+}
+.div_table_login_logon {
+  width: 30%;
+  margin: auto;
+  margin-top: 5%;
+ 
+}
+.div_table_login_logon fieldset{
+  padding: 3%;
+}
+.lg{
+  width: 100%;
+  background-color: var(--bs-gray-200);
+}
+.btn_cancelar_login{
+  background-color: var(--bs-red);
+  height: 25px;
+  border-radius: 3px;
+  width: 20%;
+  border: transparent;
+}
+.btn_cancelar_login a{
+text-decoration: none;
+color: var(--bs-white);
+}
+.btn_salvar_login{
+  background-color: var(--bs-green);
+  height: 25px; 
+  border-radius: 3px;
+  color: var(--bs-white);
+  width: 20%;
+  border: transparent;
+}
+.btn_cadastrarnovouser_login{
+  background-color: var(--bs-warning);
+  height: 25px; 
+  border-radius: 3px;
+  color: var(--bs-white);
+  width: 20%;
+  border: transparent;
+}
+.btn_cadastrarnovouser_login a{
+  text-decoration: none;
+  color: var(--bs-white);
+}
+.menu_item a{
+  text-decoration: none;
+}
+.div_btns_tabela_documento{
+  width: 100%;
+  display: flex; 
+}
+.btn_process{
+  height: 100px;
+}

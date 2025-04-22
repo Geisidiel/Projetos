@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home page</title>
+    <link rel="stylesheet" href="css/root.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    
+    
+</head>
+<body>
+    <div class="main_home_page">
+        <div class="menu_div">
+            <%- include('partials/header'); -%>
+        </div>
+        <div class="content_conte">
+            <div class="div_tabelas">
+                <% if (message !="") { %>
+                    <section id="meuElemento" class=" <%= type  %>">
+                      <p><%= message  %></p>
+                    </section>
+                  <% } %>
+                    <legend>Filtros</legend>            
+                <div class="div_conteudo_tabela">
+                    
+                    <table class="tabela_documento">
+                        <thead>
+                          <tr>
+                            <th scope="col">Clientes</th>
+                            <th scope="col">Data</th>
+                            <th scope="col">User</th>
+                            <th scope="col">Açoes</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+
+                            
+                            <% Clientes.forEach(clientes => { %>
+                                <tr>
+                                    <td><%= clientes.cliente %></td>
+                                    <td><%= clientes.createdAt %></td>
+                                    <td><%= clientes.User.nome %></td>
+                                    <td class="divs_btn_tabela">
+                                        <a class="btn_table_green" href="/:<%= clientes.id %>">Editar</a>
+                                        <a class="btn_table_red" href="/:<%= clientes.id %>">Deletar</a>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+
+                </div>
+                
+            </div>
+        
+        </div>
+    </div>
+
+    <div class="meu_modal">
+        
+    </div>
+</body>
+
+<script src="js/automation.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+</html>
