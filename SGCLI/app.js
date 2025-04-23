@@ -7,6 +7,7 @@ const path = require('path');
 const sequelize_db = require('./Banco/db')
 
 //model carregados
+const Movilotes = require('./Controler/model_movimento_lotes');
 const Cliente =require('./Controler/model_criar_cliente');
 const Lote =require('./Controler/model_criar_lote');
 const Categoria =require('./Controler/model_criar_categoria');
@@ -730,6 +731,7 @@ app.post('/finalizarlote/:id', async (req, res) => {
 
 //classificação
 app.get('/classificar',ensureAuthenticated,async (req,res)=>{
+  
   const lotes =  await Lote.findAll({where:{localidade: "vinculado"}});
   try {
     if (lotes ==null) {
@@ -955,6 +957,39 @@ app.get('/estruturacadastradas',ensureAuthenticated ,(req,res)=>{
     res.json(estrutura)
   })
 })
+//rota textEmphasisStyle
+app.get('/teste6',async(req,res)=>{
+  const n_lote ='00000001';
+  await Documento.findAll({where:{lote: n_lote}})
+  //await Lote.findAll()
+  .then((lote)=>{
+    res.json(lote)
+  })
+
+})
+app.get('/teste8', async (req, res) => {
+  const n_lote = '00000001'; // Corrigido para string, pois o lote no banco parece estar como string
+
+  try {
+    const documentos = await Documento.findAll({ where: { lote: n_lote } });
+
+    // Soma das folhas
+    const totalFolhas = documentos.reduce((total, doc) => {
+      return total + parseInt(doc.qtdfolhas, 10); // parseInt pois qtdfolhas é string
+    }, 0);
+
+    // Retorna tanto os documentos quanto a soma
+    res.json({
+      documentos,
+      totalFolhas
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: 'Erro ao consultar os documentos' });
+  }
+});
+
 
 //fabrica casa da veia
 /*app.listen(port, '192.168.0.224', () => {
@@ -965,6 +1000,7 @@ app.get('/estruturacadastradas',ensureAuthenticated ,(req,res)=>{
 /*app.listen(port, '192.168.0.23', () => {
   console.log(`Server running at http://0.0.0.0:${port}/`);
 });*/
+
 //FabricaInfo
 
 app.listen(port, '192.168.55.247', () => {
