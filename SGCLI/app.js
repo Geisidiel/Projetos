@@ -996,13 +996,13 @@ app.get('/teste8', async (req, res) => {
   console.log(`Server running at http://0.0.0.0:${port}/`);
 });*/
 //Ape casa
-
+/*
 app.listen(port, '192.168.0.23', () => {
   console.log(`Server running at http://0.0.0.0:${port}/`);
-});
+});*/
 
 //FabricaInfo
-/*
+
 app.listen(port, '192.168.55.247', () => {
   console.log(`Server running at http://0.0.0.0:${port}/`);
-});*/
+});
