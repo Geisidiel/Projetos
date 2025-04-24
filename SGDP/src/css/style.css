@@ -1,0 +1,65 @@
+.div_table_lan{
+    width: 80%;
+    height: 50%;
+    margin: auto;
+    margin-bottom: 5%;
+    margin-top: 2%;
+    
+    
+}
+.scro{
+    overflow-y: auto;
+}
+
+.div_table_login{
+    width: 30%;
+    height: auto;
+    margin: auto;
+    margin-top: 5%;
+}
+
+.div_img_login{
+    width: 100%;
+    margin: auto;
+    margin-top: -2%;
+}
+.div_img_login h4{
+    text-align: center;
+    color: cadetblue;
+}
+.alink_cads{
+    margin-left: 2%;
+    text-decoration: none;
+}
+.alink_cadss{
+    margin-left: 1%;
+    text-decoration: none;
+}
+.footer_ofi{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+}
+.border{
+    border: none;
+}
+.display_none{
+    display: none;
+}
+
+.alerte-sucess-node{
+    display:none
+}
+.sucess{
+    color:green ;
+}
+.danger{
+    color:orangered ;
+}
+.div_forms{
+    width: 40%;
+    margin: auto;
+    margin-top: 6%;
+}

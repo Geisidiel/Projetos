@@ -1,0 +1,69 @@
+
+<div class="sidebar">
+    <ul class="menu">
+        <li class="menu-item menu_item">
+            <% if (usuarioLogado) { %>
+           <strong><a href="/sistem">SGCLI- Gestão de arquivos (<%= usuarioLogado.nome %>) </a>, <a class="btnsair" href="/logout">Sair </a></strong> 
+          
+            <% } %>
+        </li>
+        <br>
+        <br>
+        <li class="menu-item has-submenu">
+            <a href="#">Operacional</a>
+            <ul class="submenu">
+              <li><a class="" href="/vincularlotecaixa">Vincular</a></li>
+              <li><a class="" href="/coletanoclient">Coleta</a></li>
+              <li><a class="" href="/recebimentoarmazem">Receber</a></li>
+            </ul>
+        </li>
+        <li class="menu-item has-submenu">
+            <a href="#">Inventariar</a>
+            <ul class="submenu">
+            <li><a class="" href="/cadastrardocumento">Catalogar</a></li>
+              <li><a class="" href="/criartipodocumento">Tipo documental</a></li>
+              <li><a class="" href="/novocliente">Cliente</a></li>
+              <li><a class="" href="/criarlote">Lotes</a></li>
+              <li><a class="" href="/cadastrarcategoria">Categoria</a></li>
+              <li><a class="" href="/cadastrarsubcategoria">Subcategoria</a></li>
+            </ul>
+        </li>
+        <li class="menu-item has-submenu">
+            <a href="#">Cadastros</a>
+            <ul class="submenu">
+              <li><a class="" href="/documentoscatalogados">Documentos catalogados</a></li>
+              <li><a class="" href="/tiposdocumentais">Tipo documental</a></li>
+              <li><a class="" href="/clientes">Clientes</a></li>
+              <li><a class="" href="/lotescadastrados">Lotes </a></li>
+              <li><a class="" href="/estruturacadastradas">Estrutura </a></li>
+            </ul>
+        </li>
+        <li class="menu-item has-submenu">
+            <a href="#">Digitalização</a>
+            <ul class="submenu">
+                <li><a class="" href="/classificar">Classificação</a></li>
+                <li><a class="" href="/preparar">Preparação</a></li>
+                <li><a class="" href="/digitalizar">Digitalização</a></li>
+                <li><a class="" href="/controle">Controle</a></li>
+                <li><a class="" href="/plantas">Plantas</a></li>
+                <li><a class="" href="/guarda">Guarda</a></li>
+            </ul>
+        </li>
+        
+        <li class="menu-item has-submenu">
+            <a href="#">Gerenciamento</a>
+            <ul class="submenu">
+                <li><a href="/usuarios">Usuários</a></li>
+                <li><a href="#">Geral</a></li>
+            </ul>
+        </li>
+        <li class="menu-item has-submenu">
+            <a href="#">Relatórios</a>
+            <ul class="submenu">
+                <li><a class="" href="#">Produtividade</a></li>
+              <li><a class="" href="#">Alteraçoes</a></li>
+            </ul>
+        </li>
+       
+    </ul>
+</div>

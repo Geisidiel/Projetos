@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar documento</title>
+    <link rel="stylesheet" href="css/root.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+</head>
+<body>
+    <div class="main_home_page">
+        <div class="menu_div">
+            <%- include('partials/header'); -%>
+        </div>
+
+    
+        <div class="content_conte">
+            <div class="div_cadastrardocumento">
+                <fieldset class="fieldset_forms">
+                    <legend>Cadastrar novo documento</legend>
+                    
+                    
+                    <form class="forms_cadastrardoc" action="/cadastrardocumento" method="post">
+                        <% if (message !="") { %>
+                            <section id="meuElemento" class=" <%= type  %>">
+                              <p><%= message  %></p>
+                            </section>
+                          <% } %>
+
+                        <div class="div_iten_forms">
+                            <label for="">Cliente:</label>
+                            <select name="clienteId" id="select1">
+                                <option value="">Selecione</option>
+                                <% Cl.forEach(cliente => { %>
+                                    <option value="<%=cliente.id %>"><%= cliente.cliente %></option>
+                                  <% }); %>
+                            </select>
+                        </div>
+                        
+                        <div class="div_iten_forms">
+                            <label for="">Categoria:</label>
+                            <select name="categoriaId" id="select2">
+                                <option value="">Selecione</option>
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div class="div_iten_forms">
+                            <label for="">Subcategoria:</label>
+                            <select name="subcategoriaId" id="select3">
+                                <option value="">Selecione</option>
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div class="div_iten_forms">
+                            <label for="">Lote:</label>
+                            <select name="lote" >
+                                <option value="">Selecione</option>
+                                <% Lt.forEach(lote => { %>
+                                    <option value="<%=lote.n_lote %>"><%= lote.n_lote %></option>
+                                  <% }); %>
+                            </select>
+                        </div>
+                        
+                        <div class="div_iten_forms">
+                            <label for="">Tipo de documento:</label>
+                            <select id="meuSelect" name="tipodocumento" id="">
+                                <option value="">Selecione</option>
+                                <% Td.forEach(tipod => { %>
+                                    <option value="<%=tipod.tipodocumento %>"><%= tipod.tipodocumento %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                        <div class="div_iten_forms">
+                            <label for="">Processo:</label>
+                           <input id="meuInput" name="processo" type="text">
+                        </div>
+                        <div class="div_iten_forms">
+                            <label for="">Volume:</label>
+                           <input id="meuInput" name="volume" type="text">
+                        </div>
+                       
+                        <div class="div_iten_forms">
+                            <label for="">Folhas:</label>
+                           <input name="qtdfolhas" type="text">
+                        </div>
+                        <div class="div_iten_forms">
+                            <label for="">Descrição:</label>
+                           <Textarea class="forms_text" id="descricao" name="descricao"></Textarea>
+                        </div>
+                        <div class="div_iten_forms">
+                            <button class="btn_salvar" type="submit">Cadastrar</button>
+                            <button class="btn_cancelar" ><a href="/sistem">Cancelar</a></button>
+                        </div>
+                        
+                    </form>
+
+                </fieldset>
+            </div>
+        </div>
+    </div>
+
+    
+</body>
+
+<script src="js/automation.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+</html>
