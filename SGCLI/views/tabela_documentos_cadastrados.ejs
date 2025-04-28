@@ -92,12 +92,13 @@
                         </thead>
                         <tbody>
 
+
                             <% Cdr.forEach(criardocumento => { %>
                                 <tr>
                                     <td><%= criardocumento.cliente.cliente %></td>
                                     <td><%= criardocumento.categorium.categoria %></td>
                                     <td><%= criardocumento.subcategorium.subcategoria %></td>
-                                    <td><%= criardocumento.lote %></td>
+                                    <td><%= criardocumento.Lote.n_lote %></td>
                                     <td><%= criardocumento.tipodocumento %></td>
                                     <td><%= criardocumento.processo %></td>
                                     <td><%= criardocumento.volume %></td>
@@ -106,7 +107,7 @@
                                         <a class="btn_table_green" href="/:<%= criardocumento.id %>">Editar</a>
                                         <a class="btn_table_red" href="/:<%= criardocumento.id %>">Deletar</a>
                                     </td>
-                                    
+
                                 </tr>
                             <% }); %>
 

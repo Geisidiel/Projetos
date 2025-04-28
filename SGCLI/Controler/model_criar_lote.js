@@ -21,10 +21,10 @@ const Lote = sequelize_db.define(
         
     },
     localidade: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        defaultValue: 'lotedisponivel'
-        
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: 'lotedisponivel'
+            
     },
     userId:{
         type: DataTypes.INTEGER,

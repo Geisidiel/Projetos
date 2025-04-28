@@ -79,7 +79,31 @@ window.onload = function () {
   });
 }
   
+document.addEventListener('DOMContentLoaded', () => {
+  const selectLote = document.getElementById('select-lote');
+  const inputTotal = document.getElementById('total-folhas');
 
+  if (selectLote) {
+    selectLote.addEventListener('change', async () => {
+      const loteId = selectLote.value;
+      console.log("ID do lote selecionado:", loteId);
+
+      if (!loteId) {
+        inputTotal.value = '0';  // Se não tiver lote selecionado, o valor é 0
+        return;
+      }
+
+      try {
+        const response = await fetch(`/somafolhas/${loteId}`);
+        const data = await response.json();
+        inputTotal.value = data.total;  // Atualiza o valor no input
+      } catch (error) {
+        console.error('Erro ao buscar soma:', error);
+        inputTotal.value = 'Erro';  // Exibe erro caso algo falhe
+      }
+    });
+  }
+});
 //menu lateral
 document.addEventListener('DOMContentLoaded', function() {
   const submenuItems = document.querySelectorAll('.has-submenu > a');
@@ -188,3 +212,5 @@ function adicionarProcesso() {
 // Adicionando evento de escuta para quando o input ou o select mudar
 document.getElementById('inputNumero').addEventListener('input', adicionarProcesso);
 document.getElementById('selectProcesso').addEventListener('change', adicionarProcesso);
+
+
