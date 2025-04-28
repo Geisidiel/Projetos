@@ -215,6 +215,7 @@ color: var(--bs-white);
   border-collapse: collapse; /* Remove os espaços entre as células */
   margin-top: 1%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para a tabela */
+  
 }
 
 /* Estilo do cabeçalho da tabela */
@@ -222,11 +223,16 @@ color: var(--bs-white);
   background-color: var(--bs-gray-900);
   color: var(--bs-white);
 }
+.tabela_documento  thead  th{
+  position: sticky;
+}
+
 
 .tabela_documento th {
   padding: 1px;
   text-align: left;
   text-align: center;
+  
 }
 
 /* Estilo das células */
@@ -256,7 +262,7 @@ color: var(--bs-white);
   width: 100%;
   display: flex;
   padding:5%;
-  gap: 5px; /* espaço entre os botões */
+  gap: 8px; /* espaço entre os botões */
   justify-content: center; /* opcional: centraliza os botões dentro da <td> */
 }
 
@@ -341,3 +347,16 @@ color: var(--bs-white);
 .btn_process{
   height: 100px;
 }
+.tabela_documento thead th {
+  position: sticky;
+  top: 0;
+  background-color: var(--bs-gray-900); /* Mantém o fundo fixo */
+  color: var(--bs-white);
+  z-index: 2;
+}
+.tabela_documento tbody tr:hover {
+  background-color: var(--bs-gray-400); /* Cor de destaque ao passar o mouse */
+  cursor: pointer; /* Mostra que é interativo */
+  transition: background-color 0.2s ease-in-out;
+}
+

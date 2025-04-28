@@ -27,7 +27,7 @@
                     <form class="forms_cadastrardoc" action="/movimentoclassificar" method="post">
                         <div class="div_iten_forms">
                             <label for="">Lote:</label>
-                            <select name="lote" >
+                            <select id="select-lote" name="lote" >
                                 <option value="">Selecione</option>
                                 <% Lt.forEach(lote => { %>
                                     <option value="<%=lote.n_lote %>"><%= lote.n_lote %></option>
@@ -37,10 +37,14 @@
                         
                         <div class="div_iten_forms">
                             <label for="">Movimento:</label>
-                            <input  value="loteclasificado" name="localidade" type="hidden">
+                            <input readonly value="loteclasificado" name="localidade" type="hidden">
                         </div>
 
-                        
+                        <div class="div_iten_forms">
+                            <label for="">Quantidade de folhas:</label>
+                            <input id="total-folhas"  name="qtdfolhas" type="text">
+                        </div>
+
                         <div class="div_iten_forms">
                             <button class="btn_salvar" type="submit">Salvar</button>
                             <button class="btn_cancelar" ><a href="/sistem">Cancelar</a></button>

@@ -298,3 +298,15 @@ lotedigitalizado:  lote disponivel para controlar;
 lotecontrolado:  lote disponivel para plantas , se houver;
 loteguarda: lote disponivel para guarda;
 lotefluxodigitalizafinalizado: lote processadoemtodas as esteiras;*/
+
+
+created_at: {
+  type: Sequelize.DATE,
+  allowNull: false,
+  defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+},
+updated_at: {
+  type: Sequelize.DATE,
+  allowNull: false,
+  defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
+}

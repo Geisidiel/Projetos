@@ -27,7 +27,7 @@ const { type } = require('os');
 const flash = require('connect-flash');
 const vincular = require('./Controler/model_criar_vinculos');
 const { verify } = require('crypto');
-const Movifluxo =require('./Controler/model_movimento_fluxos')
+const Movifluxolote =require('./Controler/model_movimento_lotes');
 
 //Configs
 //Criar sessão
@@ -35,14 +35,16 @@ app.use(session({
   secret: 'sua_chave_super_secreta',
   resave: false,
   saveUninitialized: false,
+  rolling: true,
   cookie: {
-    maxAge: 1000 * 60 * 5 // <-- 15 minutos de inatividade
+    maxAge: 1000 * 60 * 10 // <-- 15 minutos de inatividade
   }
 }));
 /*app.use((req, res, next) => {
   res.locals.error = req.flash('error');
   next();
 });*/
+
 app.use(passport.initialize());
 app.use(passport.session());
 // Middleware para analisar dados JSON
@@ -341,26 +343,39 @@ app.post('/novasubcategoria', ensureAuthenticated, async (req, res) => {
 });
 
 //Cadastrar lote
-app.get('/criarlote', ensureAuthenticated ,(req,res)=>{
+app.get('/criarlote', ensureAuthenticated ,async(req,res)=>{
   res.render('cadastrar_lote', { message: "", type: "" })
 })
-app.get('/lotescadastrados',ensureAuthenticated ,(req,res)=>{
-  Lote.findAll({
+app.get('/lotescadastrados',ensureAuthenticated ,async(req,res)=>{
+  const lotes = await Lote.findAll({
     include: [
       { model: Usuario, attributes: ['nome'] }
     ]
-  })
-  .then((lote)=>{
-    res.render('tabela_lotes',{ Lotes:lote,  message: "Registros carregados com sucesso..", type: "sucess" })
-  })
-})
+  });
+try {
+  if(lotes){
+    return res.render('tabela_lotes',{ Lotes:lotes,  message: "Registros carregados com sucesso..", type: "sucess" })
+   }
+  if(lotes.length === 0){
+   return res.render('tabela_lotes',{ Lotes:lotes,  message: "Não há lotes cadastrados", type: "danger" })
+  }
+} catch (error) {
+      return res.render('tabela_lotes',{ Lotes:lotes,  message: "Erro ao buscar registros", type: "danger" })
+  }
+});
+
 app.post('/novolote', ensureAuthenticated ,async (req,res)=>{
   
+  const lote = await Lote.findOne({ where: { n_lote: req.body.n_lote } });
   try {
-    const lote = await Lote.findOne({ where: { n_lote: req.body.n_lote } });
-    if (lote) {
-      res.render('cadastrar_lote', { message: "Lote ja cadastrado!", type: "danger" });
-    } else {
+    if (!req.body.n_lote) {
+      return res.render('cadastrar_lote', { message: "Informe todos os campos!", type: "danger" });
+     };
+  
+    if(lote){
+      return res.render('cadastrar_lote', { message: "Lote ja cadastrado!", type: "danger" });
+    } 
+    else {
       await Lote.create({ n_lote: req.body.n_lote , userId: req.user.id });
       res.render('cadastrar_lote', { message: "Cadastrado com sucesso!", type: "sucess" });
     }
@@ -390,11 +405,19 @@ app.get('/cadastrardocumento',ensureAuthenticated , async (req, res) => {
       Cl: cliente,
       Lt: lote,
     });
-  } catch (error) {
+  } 
+  catch (error) {
+    const [tipodocumento,cliente, lote] = await Promise.all([
+      Tipodocumento.findAll(),
+      Cliente.findAll(),
+      Lote.findAll({where: { localidade: "lotedisponivel" }})
+    ]);
+
     console.error('Error fetching data:', error);
     res.render('cadastrar_documento', { message: "Erro ao cadastrar", type: "danger"});
   }
 });
+
 app.post('/cadastrardocumento',ensureAuthenticated , async (req, res) => {
   try {
       // Verificação de campos obrigatórios
@@ -419,7 +442,7 @@ app.post('/cadastrardocumento',ensureAuthenticated , async (req, res) => {
               clienteId: req.body.clienteId,
               categoriaId: req.body.categoriaId,
               subcategoriaId: req.body.subcategoriaId,
-              lote: req.body.lote,
+              loteId: req.body.lote,
               tipodocumento: req.body.tipodocumento,
               processo: req.body.processo,
               volume: req.body.volume,
@@ -434,7 +457,7 @@ app.post('/cadastrardocumento',ensureAuthenticated , async (req, res) => {
               type: "sucess",
               Td: await Tipodocumento.findAll(),
               Cl: await Cliente.findAll(),
-              Lt: await Lote.findAll({where: { localidade: "lotedisponive" }})
+              Lt: await Lote.findAll({where: { localidade: "lotedisponivel" }})
           });
       }
   } catch (error) {
@@ -468,6 +491,7 @@ app.get('/documentoscatalogados',ensureAuthenticated , async (req, res) => {
           { model: Cliente, attributes: ['cliente'] },
           { model: Categoria, attributes: ['categoria'] },
           { model: Subcategoria, attributes: ['subcategoria'] },
+          { model: Lote, attributes: ['n_lote'] },
           { model: Usuario, attributes: ['nome'] }
         ]
       }),
@@ -499,7 +523,13 @@ app.get('/documentoscatalogados',ensureAuthenticated , async (req, res) => {
       Tipodocumento.findAll(),
       Cliente.findAll(),
       Lote.findAll(),
-      Documento.findAll(),
+      Documento.findAll({ include: [
+        { model: Cliente, attributes: ['cliente'] },
+        { model: Categoria, attributes: ['categoria'] },
+        { model: Subcategoria, attributes: ['subcategoria'] },
+        { model: Lote, attributes: ['n_lote'] },
+        { model: Usuario, attributes: ['nome'] }
+      ]}),
     ]);
 
     res.render('tabela_documentos_cadastrados', {
@@ -517,6 +547,9 @@ app.get('/documentoscatalogados',ensureAuthenticated , async (req, res) => {
 app.post('/criartipodocumento',ensureAuthenticated ,async(req,res)=>{
 
   try {
+    if(!req.body.tipodocumento){
+      res.render('cadastrar_tipo_documento', { message: " Preencha todos os campos!", type: "danger" });
+    };
     const client = await Tipodocumento.findOne({ where: { tipodocumento: req.body.tipodocumento } });
     if (client) {
       res.render('cadastrar_tipo_documento', { message: " Tipo de documento ja cadastrado!", type: "danger" });
@@ -635,10 +668,11 @@ app.post('/recebimento',ensureAuthenticated , async(req,res)=>{
 app.get('/vincularlotecaixa', ensureAuthenticated ,async(req,res)=>{
 try {
     const lotess =  await Lote.findAll({where: { localidade: "loteavincular" }});
-  if (lotess == null) {
-    res.render('cadastrar_vinculos',{ Lote:lotess,  message: "Lotes carregados com sucesso..", type: "sucess" })
-  } else {
+  if (!lotess || lotess.length === 0) {
     res.render('cadastrar_vinculos',{ Lote:lotess,  message: "Não ha lotes disponiveis..", type: "danger" })
+  } else {
+    res.render('cadastrar_vinculos',{ Lote:lotess,  message: "Lotes carregados com sucesso..", type: "sucess" })
+
   }
 } catch (error) {
   const lotess =  await Lote.findAll();
@@ -712,7 +746,7 @@ app.post('/finalizarlote/:id', async (req, res) => {
       ]
     })
     .then((lote)=>{
-      res.render('tabela_lotes',{ Lotes:lote,  message: "Lotes finalizado  com sucesso..", type: "sucess" })
+      res.redirect('/lotescadastrados')
     })
   } catch (error) {
     console.error('Erro ao finalizar lote:', error);
@@ -722,7 +756,7 @@ app.post('/finalizarlote/:id', async (req, res) => {
       ]
     })
     .then((lote)=>{
-      res.render('tabela_lotes',{ Lotes:lote,  message: "Erroao careegar lotes...", type: "danger" })
+      res.redirect('/lotescadastrados')
     })
   }
 });
@@ -733,8 +767,10 @@ app.post('/finalizarlote/:id', async (req, res) => {
 app.get('/classificar',ensureAuthenticated,async (req,res)=>{
   
   const lotes =  await Lote.findAll({where:{localidade: "vinculado"}});
+  console.log(lotes)
   try {
-    if (lotes ==null) {
+    if (!lotes || lotes.length === 0) {
+      
         return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Não há lotes disponiveis para processar", type:"danger"})
     } else {
       return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Lotes disponiveis para processamento", type:"sucess"})
@@ -768,7 +804,7 @@ app.post('/classificar',ensureAuthenticated,async (req,res)=>{
 app.get('/preparar',ensureAuthenticated,async (req,res)=>{
   const lotes =  await Lote.findAll({where:{localidade: "loteclassificado"}});
   try {
-    if (lotes ==null) {
+    if (!lotes || lotes.length === 0) {
         return res.render('cadastrar_movimento_preparacao', {Lt: lotes, message:"Não há lotes disponiveis para processar", type:"danger"})
     } else {
       return res.render('cadastrar_movimento_preparacao', {Lt: lotes, message:"Lotes disponiveis para processamento", type:"sucess"})
@@ -801,7 +837,7 @@ app.post('/preparar',ensureAuthenticated,async (req,res)=>{
 app.get('/digitalizar',ensureAuthenticated,async (req,res)=>{
   const lotes =  await Lote.findAll({where:{localidade: "lotepreparado"}});
   try {
-    if (lotes ==null) {
+    if (!lotes || lotes.length === 0) {
         return res.render('cadastrar_movimento_digitalizado', {Lt: lotes, message:"Não há lotes disponiveis para processar", type:"danger"})
     } else {
       return res.render('cadastrar_movimento_digitalizado', {Lt: lotes, message:"Lotes disponiveis para processamento", type:"sucess"})
@@ -814,7 +850,7 @@ app.get('/digitalizar',ensureAuthenticated,async (req,res)=>{
 app.get('/controle',ensureAuthenticated,async (req,res)=>{
   const lotes =  await Lote.findAll({where:{localidade: "vinculado"}});
   try {
-    if (lotes ==null) {
+    if (!lotes || lotes.length === 0) {
         return res.render('cadastrar_movimento_controlado', {Lt: lotes, message:"Não há lotes disponiveis para processar", type:"danger"})
     } else {
       return res.render('cadastrar_movimento_controlado', {Lt: lotes, message:"Lotes disponiveis para processamento", type:"sucess"})
@@ -827,7 +863,7 @@ app.get('/controle',ensureAuthenticated,async (req,res)=>{
 app.get('/plantas',ensureAuthenticated,async (req,res)=>{
   const lotes =  await Lote.findAll({where:{localidade: "vinculado"}});
   try {
-    if (lotes ==null) {
+    if (!lotes || lotes.length === 0) {
         return res.render('cadastrar_movimento_plantas', {Lt: lotes, message:"Não há lotes disponiveis para processar", type:"danger"})
     } else {
       return res.render('cadastrar_movimento_plantas', {Lt: lotes, message:"Lotes disponiveis para processamento", type:"sucess"})
@@ -840,7 +876,7 @@ app.get('/plantas',ensureAuthenticated,async (req,res)=>{
 app.get('/guarda',ensureAuthenticated,async (req,res)=>{
   const lotes =  await Lote.findAll({where:{localidade: "vinculado"}});
   try {
-    if (lotes ==null) {
+    if (!lotes || lotes.length === 0) {
         return res.render('cadastrar_movimento_guarda', {Lt: lotes, message:"Não há lotes disponiveis para processar", type:"danger"})
     } else {
       return res.render('cadastrar_movimento_guarda', {Lt: lotes, message:"Lotes disponiveis para processamento", type:"sucess"})
@@ -849,8 +885,6 @@ app.get('/guarda',ensureAuthenticated,async (req,res)=>{
     return res.render('cadastrar_movimento_guarda', {Lt: lotes, message:"Erro ao processar", type:"danger"})
   }
 })
-
-
 
 //rota dos selects
 app.get('/segundoselect',ensureAuthenticated ,async(req,res)=>{
@@ -877,6 +911,44 @@ app.get('/terceiroselect',ensureAuthenticated ,async(req,res)=>{
   res.json(dadosSelect3);
   
 })
+app.get('/somafolhas/:loteId', ensureAuthenticated, async (req, res) => {
+  try {
+    const { loteId } = req.params;
+
+    const soma = await Documento.sum('qtdfolhas', {
+      where: { loteId: loteId }  // aqui você busca pelo id mesmo
+    });
+    console.log(soma);
+
+    res.json({ total: soma || 0 });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao buscar soma de folhas' });
+  }
+});
+//Cadastrar movimento de lotes produção
+app.post('/movimentoloteclassificado',async(req,res)=>{
+  const lotes =  await Lote.findAll({where:{localidade: "vinculado"}});
+  try {
+    if (!req.body.lote ||!req.body.localidade|| !req.body.qtdfolhas) {
+      return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Preencha todos so campos!", type:"danger"})
+    } else {
+      Documento.create({
+        n_loteId: req.body.lote,
+        localidade: req.body.localidade,
+        qtdfolhas: req.body.qtdfolhas,
+        userId: req.user.id
+      })
+      .then(()=>{
+        return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Cadastro de movimento lotes registrads com sucesso!", type:"sucess"})
+      })
+    }
+    
+  } catch (error) {
+    return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Erro ao registrar dados", type:"danger"})
+  }
+})
+
 //rotas para filtrar tabebla
 
 //testes com rotas e json()
@@ -886,7 +958,6 @@ app.get('/testetabela', ensureAuthenticated , async(req ,res)=>{
     res.json(dados)
   })
 })
-
 app.get('/teste2', ensureAuthenticated ,async(req, res)=>{
   const clientes = await Cliente.findAll({
     include: [
@@ -968,10 +1039,10 @@ app.get('/teste6',async(req,res)=>{
 
 })
 app.get('/teste8', async (req, res) => {
-  const n_lote = '00000001'; // Corrigido para string, pois o lote no banco parece estar como string
+  const id = '1'; // Corrigido para string, pois o lote no banco parece estar como string
 
   try {
-    const documentos = await Documento.findAll({ where: { lote: n_lote } });
+    const documentos = await Documento.findAll({ where: { id: id } });
 
     // Soma das folhas
     const totalFolhas = documentos.reduce((total, doc) => {
@@ -989,6 +1060,21 @@ app.get('/teste8', async (req, res) => {
     res.status(500).json({ erro: 'Erro ao consultar os documentos' });
   }
 });
+app.get('/teste10',async(req,res)=>{
+await  Documento.findAll({
+      include: [
+        { model: Cliente, attributes: ['cliente'] },
+        { model: Categoria, attributes: ['categoria'] },
+        { model: Subcategoria, attributes: ['subcategoria'] },
+        { model: Lote, attributes: ['n_lote'] },
+        { model: Usuario, attributes: ['nome'] }
+      ]
+    })
+
+  .then((documento)=>{
+    res.json(documento)
+  })
+})
 
 
 //fabrica casa da veia
@@ -996,13 +1082,13 @@ app.get('/teste8', async (req, res) => {
   console.log(`Server running at http://0.0.0.0:${port}/`);
 });*/
 //Ape casa
-/*
-app.listen(port, '192.168.0.23', () => {
-  console.log(`Server running at http://0.0.0.0:${port}/`);
-});*/
-
-//FabricaInfo
 
 app.listen(port, '192.168.55.247', () => {
   console.log(`Server running at http://0.0.0.0:${port}/`);
 });
+
+//FabricaInfo
+/*
+app.listen(port, '192.168.55.247', () => {
+  console.log(`Server running at http://0.0.0.0:${port}/`);
+});*/

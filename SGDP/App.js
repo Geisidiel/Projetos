@@ -246,7 +246,7 @@ app.post('/novoapontamento',(req, res) =>{
 //});
 
 //casa
-/app.listen(port, '192.168.5.100', () => {
+/app.listen(port, '192.168.0.23', () => {
     console.log(`Server running at http://0.0.0.0:${port}/`);
 });
 //fabrica info
