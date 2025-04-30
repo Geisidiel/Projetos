@@ -28,6 +28,7 @@ const flash = require('connect-flash');
 const vincular = require('./Controler/model_criar_vinculos');
 const { verify } = require('crypto');
 const Movifluxolote =require('./Controler/model_movimento_lotes');
+const { Console } = require('console');
 
 //Configs
 //Criar sessão
@@ -622,15 +623,15 @@ app.get('/coletanoclient',ensureAuthenticated , async(req,res)=>{
 
 app.post('/coletar',ensureAuthenticated , async(req,res)=>{
   try {
-    const rfid  = await Vincular.findAll({ where: { n_rfid: req.body.n_rfid } });
     if(!req.body.n_rfid){
       return res.render('cadastrar_movimento_coleta', { message: "Preencha todos os campos..", type: "danger"})
     };
-    if (rfid) {
+    const rfid  = await Vincular.findAll({ where: { n_rfid: req.body.n_rfid } });
+    if (rfid == null) {
       return res.render('cadastrar_movimento_coleta', { message: "A caixa informada não foi devidamente processada nas etapas: Finalizar-lote & Vincular-caixas ", type: "danger"})
     } else {
        Movimento.create({ n_rfid: req.body.n_rfid ,userId: req.user.id ,localidade: req.body.localidade });
-       return res.render('cadastrar_movimento_coleta', { message: "Movimento de coleta cadastrado", type: "danger"})
+       return res.render('cadastrar_movimento_coleta', { message: "Movimento de coleta cadastrado", type: "sucess"})
 
     }
   } catch (error) {
@@ -723,7 +724,6 @@ app.post('/criarvinculo', ensureAuthenticated, async (req, res) => {
   }
 });
 
-
 // Rota para excluir
 app.post('/deletar/:id', async (req, res) => {
   const { id } = req.params;
@@ -779,24 +779,35 @@ app.get('/classificar',ensureAuthenticated,async (req,res)=>{
     return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Erro ao processar", type:"danger"})
   }
 })
-app.post('/classificar',ensureAuthenticated,async (req,res)=>{
-  const id = req.body.lote
+app.post('/classificar',async(req,res)=>{
+  const lotes =  await Lote.findAll({where:{localidade: "vinculado"}});
+  const idlote = req.body.lote
   try {
-    if (req.body.lote) {      
-      await Lote.update(
-        { localidade: 'loteclassificado' }, // <<< aqui você define o que quer alterar
-        { where: { id:id} }     // <<< ou use { numero: n_lote } se for pelo número
-      );
-      const lotes =  await Lote.findAll({where:{localidade: "vinculado"}});
-      return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Lote classificado", type:"sucess"})
-      
+    if (!req.body.lote ||!req.body.localidade|| !req.body.qtdfolhas) {
+      return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Preencha todos so campos!", type:"danger"})
     } else {
-      const lotes =  await Lote.findAll({where:{localidade: "vinculado"}});
-      return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Lote não classificado", type:"danger"})
+      const lotedb =  await Lote.findAll({where:{n_loteId:idlote }});
+      if (lotedb) {
+        return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Movimento ja cadastrado para este lote", type:"danger"})
+      } else {
+        Movifluxolote.create({
+          n_loteId: req.body.lote,
+          localidade: req.body.localidade,
+          qtdfolhas: req.body.qtdfolhas,
+          userId: req.user.id
+        });
+        await Lote.update(
+          { localidade: 'loteclassificado' }, // <<< aqui você define o que quer alterar
+          { where: { id:idlote} }     // <<< ou use { numero: n_lote } se for pelo número
+        )
+        .then(()=>{
+        return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Cadastro de movimento lotes registrads com sucesso!", type:"sucess"})
+      });
+      }
+      
     }
   } catch (error) {
-    const lotes =  await Lote.findAll({where:{localidade: "vinculado"}});
-      return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Erro ao  classificar", type:"danger"})
+    return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Erro ao registrar dados", type:"danger"})
   }
 })
 
@@ -926,28 +937,6 @@ app.get('/somafolhas/:loteId', ensureAuthenticated, async (req, res) => {
     res.status(500).json({ error: 'Erro ao buscar soma de folhas' });
   }
 });
-//Cadastrar movimento de lotes produção
-app.post('/movimentoloteclassificado',async(req,res)=>{
-  const lotes =  await Lote.findAll({where:{localidade: "vinculado"}});
-  try {
-    if (!req.body.lote ||!req.body.localidade|| !req.body.qtdfolhas) {
-      return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Preencha todos so campos!", type:"danger"})
-    } else {
-      Documento.create({
-        n_loteId: req.body.lote,
-        localidade: req.body.localidade,
-        qtdfolhas: req.body.qtdfolhas,
-        userId: req.user.id
-      })
-      .then(()=>{
-        return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Cadastro de movimento lotes registrads com sucesso!", type:"sucess"})
-      })
-    }
-    
-  } catch (error) {
-    return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Erro ao registrar dados", type:"danger"})
-  }
-})
 
 //rotas para filtrar tabebla
 
@@ -1077,18 +1066,9 @@ await  Documento.findAll({
 })
 
 
-//fabrica casa da veia
-/*app.listen(port, '192.168.0.224', () => {
-  console.log(`Server running at http://0.0.0.0:${port}/`);
-});*/
-//Ape casa
 
-app.listen(port, '192.168.55.247', () => {
+//config servidor
+app.listen(port, '192.168.183.247', () => {
   console.log(`Server running at http://0.0.0.0:${port}/`);
 });
 
-//FabricaInfo
-/*
-app.listen(port, '192.168.55.247', () => {
-  console.log(`Server running at http://0.0.0.0:${port}/`);
-});*/
