@@ -16,6 +16,7 @@ const vincular = sequelize_db.define(
         autoIncrement: true,
         primaryKey: true
     },
+
     n_lote: {
         type: DataTypes.STRING,
         allowNull: false,

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabela cliente</title>
+    <title>Tabela Produção</title>
     <link rel="stylesheet" href="css/root.css">
     <link rel="stylesheet" href="css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
@@ -22,32 +22,39 @@
                       <p><%= message  %></p>
                     </section>
                   <% } %>
-                    <legend>Filtros</legend>            
+            
                 <div class="div_conteudo_tabela">
-                    
+                    <fieldset>
+                        <legend>Filtros</legend>
+                        
+            
+                    </fieldset>
                     <table class="tabela_documento">
                         <thead>
                           <tr>
-                            <th scope="col">Clientes</th>
+                            <th scope="col">Lote</th>
+                            <th scope="col">Usuario</th>
+                            <th scope="col">imagens</th>
+                            <th scope="col">Movimento</th>
                             <th scope="col">Data</th>
-                            <th scope="col">User</th>
-                            <th scope="col">Açoes</th>
+                            
                           </tr>
                         </thead>
                         <tbody>
 
-                            
-                            <% Clientes.forEach(clientes => { %>
+
+                            <% Movimentos.forEach(movimento => { %>
                                 <tr>
-                                    <td><%= clientes.cliente %></td>
-                                    <td><%= clientes.createdAt %></td>
-                                    <td><%= clientes.User.nome %></td>
-                                    <td class="divs_btn_tabela">
-                                        <a class="btn_table_green" href="/:<%= clientes.id %>">Editar</a>
-                                        <a class="btn_table_red" href="/:<%= clientes.id %>">Deletar</a>
-                                    </td>
+                                    <td><%= movimento.Lote.n_lote %></td>
+                                    <td><%= movimento.User.nome %></td>
+                                    <td><%= movimento.qtdfolhas %></td>
+                                    <td><%= movimento.localidade %></td>
+                                    <td><%= movimento.createdAt %></td>
+
                                 </tr>
                             <% }); %>
+
+                         
                         </tbody>
                     </table>
 

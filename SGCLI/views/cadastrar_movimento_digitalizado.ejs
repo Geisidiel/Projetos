@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastrar categoria</title>
+    <title>Cadastrar digitalização</title>
     <link rel="stylesheet" href="css/root.css">
     <link rel="stylesheet" href="css/style.css">
     
@@ -24,20 +24,20 @@
                           <p><%= message  %></p>
                         </section>
                       <% } %>
-                    <form class="forms_cadastrardoc" action="/movimentoclassificar" method="post">
+                    <form class="forms_cadastrardoc" action="/digitalizar" method="post">
                         <div class="div_iten_forms">
                             <label for="">Lote:</label>
                             <select id="select-lote" name="lote" >
                                 <option value="">Selecione</option>
                                 <% Lt.forEach(lote => { %>
-                                    <option value="<%=lote.n_lote %>"><%= lote.n_lote %></option>
+                                    <option value="<%=lote.id %>"><%= lote.n_lote %></option>
                                   <% }); %>
                             </select>
                         </div>
                         
                         <div class="div_iten_forms">
                             <label for="">Movimento:</label>
-                            <input readonly value="loteclasificado" name="localidade" type="hidden">
+                            <input readonly value="lotedigitaliado" name="localidade" type="text">
                         </div>
                         <div class="div_iten_forms">
                             <label for="">Quantidade de folhas:</label>
