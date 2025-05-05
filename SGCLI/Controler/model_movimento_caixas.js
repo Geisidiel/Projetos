@@ -17,7 +17,7 @@ const movicaixa = sequelize_db.define(
         primaryKey: true
     },
     n_rfid: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
         
     },

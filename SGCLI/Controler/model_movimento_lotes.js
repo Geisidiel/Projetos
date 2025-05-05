@@ -2,8 +2,8 @@
 const sequelize_db = require('../Banco/db')
 //const Sequelize = require('sequelize')
 const { DataTypes } = require('sequelize');
-//const Vincular = require('./model_criar_vinculos')
-//const Usuario = require('./model_criar_usuario')
+const Lote = require('./model_criar_lote')
+const Usuario = require('./model_criar_usuario')
 
 // models/Usuario.js
 
@@ -17,7 +17,7 @@ const movilotes = sequelize_db.define(
         primaryKey: true
     },
     n_loteId: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
         
     },
@@ -40,6 +40,7 @@ const movilotes = sequelize_db.define(
     timestamps: true, // Adiciona createdAt e updatedAt
 });
 //movilotes.sync({force: true});
-//movicaixa.belongsTo(Vincular, { foreignKey: 'clienteId' });
-//movicaixa.belongsTo(Usuario, { foreignKey: 'userId'});
+movilotes.belongsTo(Lote, { foreignKey: 'n_loteId' });
+movilotes.belongsTo(Usuario, { foreignKey: 'userId'});
+
 module.exports = movilotes;
