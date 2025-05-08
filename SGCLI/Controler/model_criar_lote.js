@@ -2,7 +2,9 @@
 const sequelize_db = require('../Banco/db')
 //const Sequelize = require('sequelize')
 const { DataTypes } = require('sequelize');
+//const vincular = require('./model_criar_vinculos')
 const Usuario = require('./model_criar_usuario')
+
 
 // models/Usuario.js
 
@@ -36,4 +38,8 @@ const Lote = sequelize_db.define(
 });
 //Lote.sync({force: true});
 Lote.belongsTo(Usuario, { foreignKey: 'userId'});
+
+
+
+
 module.exports = Lote;

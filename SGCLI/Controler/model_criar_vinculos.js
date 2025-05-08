@@ -3,6 +3,8 @@ const sequelize_db = require('../Banco/db')
 //const Sequelize = require('sequelize')
 const { DataTypes } = require('sequelize');
 const Usuario = require('./model_criar_usuario')
+const Lote = require('./model_criar_lote')
+const Documento =  require('./model_criar_cadastro_documento')
 
 
 // models/Usuario.js
@@ -17,8 +19,8 @@ const vincular = sequelize_db.define(
         primaryKey: true
     },
 
-    n_lote: {
-        type: DataTypes.STRING,
+    loteId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
         
     },
@@ -32,6 +34,7 @@ const vincular = sequelize_db.define(
         allowNull: true,
     
     },
+
     n_rfid: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -48,4 +51,7 @@ const vincular = sequelize_db.define(
 });
 //vincular.sync({force: true});
 vincular.belongsTo(Usuario, { foreignKey: 'userId'});
+vincular.belongsTo(Lote, { foreignKey: 'loteId' });
+
+
 module.exports = vincular;
