@@ -30,6 +30,9 @@ const { verify } = require('crypto');
 const Movifluxolote =require('./Controler/model_movimento_lotes');
 const { Console } = require('console');
 const movicaixa = require('./Controler/model_movimento_caixas');
+const DB =require('./index/index');
+const ExcelJS = require('exceljs');
+
 
 //Configs
 //Criar sessão
@@ -795,7 +798,7 @@ app.post('/criarvinculo', ensureAuthenticated, async (req, res) => {
 
     // Cria o vínculo
     await Vincular.create({
-      n_lote: lote,
+      loteId: lote,
       n_caixa,
       n_caixa_secundary,
       n_rfid,
@@ -1146,7 +1149,52 @@ app.get('/producaolotes',ensureAuthenticated, async(req,res)=>{
     
   }
 })
+//Movimento de caixas
+app.get('/movimentoscaixa',ensureAuthenticated, async(req,res)=>{
+  const  movimentos = await movicaixa.findAll({include: [
+       { model: Usuario, attributes: ['nome'] }
+  ]});
+  try {
 
+   if (movimentos.length === 0) {
+    return res.render('tabela_processamento_caixas',{Movimentos:movimentos,message:"Registros não encontrados",type:"danger"})
+   } else {
+    return res.render('tabela_processamento_caixas',{Movimentos:movimentos,message:"Registros  encontrados",type:"sucess"})
+    
+   }
+
+  } catch (error) {
+    return res.render('tabela_processamento_caixas',{Movimentos:movimentos, message:"Erro ao processar",type:"danger"})
+    
+  }
+})
+//Relatorio geral unificado
+app.get('/relatoriogeral',ensureAuthenticated, async(req,res)=>{
+  
+  const  movimentos = await DB.Documento.findAll({
+    include: [
+    {model: DB.vincular,as: 'vinculo'},
+    { model: Cliente, attributes: ['cliente'] },
+    { model: Categoria, attributes: ['categoria'] },
+    { model: Subcategoria, attributes: ['subcategoria'] },
+    { model: Lote, attributes: ['n_lote'] },
+    { model: Usuario, attributes: ['nome'] }
+
+    ]})
+  try {
+
+   if (movimentos.length === 0) {
+    return res.render('tabela_relatorio_unificada',{Movimentos:movimentos,message:"Registros não encontrados",type:"danger"})
+   } else {
+    return res.render('tabela_relatorio_unificada',{Movimentos:movimentos,message:"Registros  encontrados",type:"sucess"})
+    
+   }
+
+  } catch (error) {
+    return res.render('tabela_relatorio_unificada',{Movimentos:movimentos, message:"Erro ao processar",type:"danger"})
+    
+  }
+})
 
 
 //rota dos selects
@@ -1188,6 +1236,63 @@ app.get('/somafolhas/:loteId', ensureAuthenticated, async (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'Erro ao buscar soma de folhas' });
   }
+});
+//rota para excels
+app.get('/baixar-excel', async (req, res) => {
+  const  relatorios = await DB.Documento.findAll({
+    include: [
+    {model: DB.vincular,as: 'vinculo'},
+    { model: Cliente, attributes: ['cliente'] },
+    { model: Categoria, attributes: ['categoria'] },
+    { model: Subcategoria, attributes: ['subcategoria'] },
+    { model: Lote, attributes: ['n_lote'] },
+    { model: Usuario, attributes: ['nome'] }
+
+    ]})
+
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet('Relatório');
+
+  // Cabeçalho
+  worksheet.columns = [
+    { header: 'Cliente', key: 'cliente', width: 30 },
+    { header: 'Categoria', key: 'categoria', width: 30 },
+    { header: 'Subcategoria', key: 'subcategoria', width: 30 },
+    { header: 'Lote', key: 'lote', width: 30 },
+    { header: 'Tipo documental ', key: 'tipodocumento', width: 30 },
+    { header: 'Processo', key: 'processo', width: 30 },
+    { header: 'Volume', key: 'volume', width: 10 },
+    { header: 'Descrição', key: 'descricao', width: 40 },
+    { header: 'RFID', key: 'n_rfid', width: 15 },
+    { header: 'Caixa ', key: 'n_caixa', width: 15 },
+    { header: 'Caixa', key: 'n_caixa_secundary', width: 15 },
+    { header: 'Usuário', key: 'usuario', width: 25 }
+  ];
+
+  // Dados
+  relatorios.forEach(relatorio => {
+    worksheet.addRow({
+      cliente: relatorio.cliente.cliente,
+      categoria: relatorio.categorium.categoria,
+      subcategoria: relatorio.subcategorium.subcategoria,
+      lote: relatorio.Lote.n_lote,
+      tipodocumento: relatorio.tipodocumento,
+      processo: relatorio.processo,
+      descricao: relatorio.descricao,
+      volume: relatorio.volume,
+      n_rfid: relatorio.vinculo?.n_rfid || '',
+      n_caixa: relatorio.vinculo?.n_caixa || '',
+      n_caixa_secundary: relatorio.vinculo?.n_caixa_secundary || '',
+      usuario: relatorio.User?.nome || ''
+    });
+  });
+
+  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+  res.setHeader('Content-Disposition', 'attachment; filename=relatorio.xlsx');
+
+  await workbook.xlsx.write(res);
+  res.end();
+  
 });
 
 //rotas para filtrar tabebla
@@ -1324,8 +1429,25 @@ app.get('/teste11',ensureAuthenticated,async(req,res)=>{
     .then((documento)=>{
       res.json(documento)
     })
-  })
-  
+})
+app.get('/teste12',async(req,res)=>{
+   await DB.Documento.findAll({
+    include: [
+    {model: DB.vincular,as: 'vinculo'},
+    { model: Cliente, attributes: ['cliente'] },
+    { model: Categoria, attributes: ['categoria'] },
+    { model: Subcategoria, attributes: ['subcategoria'] },
+    { model: Lote, attributes: ['n_lote'] },
+    { model: Usuario, attributes: ['nome'] }
+
+    ]})
+   .then((documento)=>{
+     res.json(documento)
+   })
+})
+
+
+
 //config servidor
 app.listen(port, '192.168.0.23', () => {
   console.log(`Server running at http://0.0.0.0:${port}/`);

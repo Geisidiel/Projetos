@@ -6,7 +6,8 @@ const Cliente = require('./model_criar_cliente')
 const Categoria = require('./model_criar_categoria')
 const Subcategoria = require('./model_criar_subcategoria')
 const Usuario = require('./model_criar_usuario')
-const Lote = require('./model_criar_lote')
+const Lote = require('./model_criar_lote');
+const vincular = require('./model_criar_vinculos');
 
 // models/Usuario.js
 
@@ -84,6 +85,5 @@ Documento.belongsTo(Cliente, { foreignKey: 'clienteId' });
 Documento.belongsTo(Categoria, { foreignKey: 'categoriaId'});
 Documento.belongsTo(Subcategoria, { foreignKey: 'subcategoriaId'});
 Documento.belongsTo(Usuario, { foreignKey: 'userId'});
-Documento.belongsTo(Lote, { foreignKey: 'loteId'}); 
-
+Documento.belongsTo(Lote, { foreignKey: 'loteId'});
 module.exports = Documento;

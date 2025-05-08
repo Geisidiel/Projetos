@@ -230,9 +230,9 @@ color: var(--bs-white);
 
 .tabela_documento th {
   padding: 1px;
-  text-align: left;
   text-align: center;
-  
+  font-size: 12px;
+  width: min-content;
 }
 
 /* Estilo das células */
@@ -242,7 +242,7 @@ color: var(--bs-white);
   border-bottom: 1px solid var(--bs-white);
 }
 .tabela_documento tr td{
-  font-size: 11px;
+  font-size: 9px;
 }
 
 /* Estilo das linhas da tabela (alternando cores) */
@@ -360,3 +360,19 @@ color: var(--bs-white);
   transition: background-color 0.2s ease-in-out;
 }
 
+.div_relatorio{
+ width: min-content;
+  margin-left: 93%;
+background-color: var(--bs-gray-900);
+padding: 3px 5px 3px 5px;
+border-radius: 10px;
+
+  
+}
+.div_relatorio a{
+  text-decoration: none;
+  color: var(--bs-white);
+ }
+ .div_relatorio:hover{
+  background-color: var(--bs-gray-600);
+ }
