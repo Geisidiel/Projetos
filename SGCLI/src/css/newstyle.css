@@ -86,6 +86,28 @@ span{
 span a{
   margin-left: 37%;
 }
-
+.div_periodo_input{
+  display: flex;
+  flex-wrap: wrap; /* permite quebra de linha */
+  gap: 1rem;  
+}
+.div_result-faturamento{
+  margin-top: 3%;
+}
+.div_result-faturamento label{
+  color: var(--bs-gray);
+  font: bolder;
+}
+.div_result-faturamento span{
+  display: flex;
+  padding-top: 5%;
+  
+}
+.btn-btn{
+  margin-top: 3%;
+}
+.div_periodo legend{
+  text-align: left;
+}
 
 
