@@ -1,0 +1,103 @@
+<nav class="navbar navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/sistem">SGCLI- Sistema Gerenciador de Arquivos</a>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Menu</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+            
+            
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Operacional
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark">
+                  <li><a class="dropdown-item" href="/vincularlotecaixa">Vincular</a></li>
+                  <li><a class="dropdown-item" href="coletanoclient">Coletar</a></li>
+                  <li><a class="dropdown-item" href="/recebimentoarmazem">Receber</a></li>
+                  
+                </ul>
+            </li>
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  inventariar   
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark">
+                  <li><a class="dropdown-item" href="/novocliente">Cliente</a></li>
+                  <li><a class="dropdown-item" href="/cadastrarcategoria">Categoria</a></li>
+                  <li><a class="dropdown-item" href="/cadastrardocumento">Catalogar</a></li>
+                  <li><a class="dropdown-item" href="/cadastrarsubcategoria">Subcatagoria</a></li>
+                  <li><a class="dropdown-item" href="/criarlote">Lote</a></li>
+                  <li><a class="dropdown-item" href="/criartipodocumento">Tipo documental</a></li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Cadastros 
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark">
+                  <li><a class="dropdown-item" href="/clientes">Cliente</a></li>
+                  <li><a class="dropdown-item" href="/documentoscatalogados">Documentos</a></li>
+                  <li><a class="dropdown-item" href="/estruturacadastradas">Estrutura  </a></li>
+                  <li><a class="dropdown-item" href="/lotescadastrados">Lotes</a></li>
+  
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Digitalização 
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark">
+                  <li><a class="dropdown-item" href="/classificar">Classificação</a></li>
+                  <li><a class="dropdown-item" href="/preparar">Preparação</a></li>
+                  <li><a class="dropdown-item" href="/digitalizar">Digitalização</a></li>
+                  <li><a class="dropdown-item" href="/controle">Controle</a></li>
+                  <li><a class="dropdown-item" href="/plantas">Plantas</a></li>
+                  <li><a class="dropdown-item" href="/guarda">Guarda</a></li>
+                  <li><a class="dropdown-item" href="/indexacao">Indexacao</a></li>
+                  <li><a class="dropdown-item" href="/conferencia">Conferencia</a></li>
+                
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Gerencimento 
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark">
+                  <li><a class="dropdown-item" href="/usuarios">Usuarios</a></li>
+                  <li><a class="dropdown-item" href="/faturamento">Faturamento</a></li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Relatorio 
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-dark">
+                  <li><a class="dropdown-item" href="/relatoriogeral">Base</a></li>
+                  <li><a class="dropdown-item" href="/producaolotes">Lotes</a></li>
+                  <li><a class="dropdown-item" href="/movimentoscaixa">Caixas</a></li>
+                </ul>
+              </li>
+              
+              <li class="nav-item dropdown">
+                
+                <% if (usuarioLogado) { %>
+                  <li><strong><a href="/sistem"> (<%= usuarioLogado.nome %>) </a>, <a class="btnsair" href="/logout">Sair </a></strong> 
+                 
+                   <% } %>
+              </li>
+          </ul>
+          
+        </div>
+      </div>
+    </div>
+  </nav>

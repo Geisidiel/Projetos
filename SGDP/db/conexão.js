@@ -8,7 +8,7 @@
 });*/
 
 const { Sequelize } = require('sequelize');
-const sequelize_db = new Sequelize('sgdp', 'root', '11942400251', {
+const sequelize_db = new Sequelize('fbi', 'root', '11942400251', {
   host: 'localhost',
   dialect: 'mysql', // ou outro dialeto como 'postgres', 'sqlite', etc.
   logging: console.log // Habilita o logging SQL

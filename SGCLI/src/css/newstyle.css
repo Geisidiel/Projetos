@@ -1,0 +1,91 @@
+.container{
+  width: 100%;
+  height: auto;
+  margin-top: 3%;
+  padding-top: 5%;
+}
+.content_forms{
+  margin-top: 2%;
+  width: 50%;
+  margin: auto;
+  
+  padding-top: 1%;
+  border-radius: 3%;
+}
+.form_vincular{
+  margin-left: 0%;
+  
+}
+.form_vincular h4{
+  color: var(--bs-gray);
+}
+.content_forms_documentos h4{
+  color: var(--bs-gray);
+}
+.div_btn_vincular{
+  margin-top: 2%;
+}
+.form_novo_documento{
+  width: 100%;
+}
+.div_forms_dc{
+  width: 100%;
+  height: auto;
+  padding: 1%;
+  display: flex;
+  flex-wrap: wrap; /* permite quebra de linha */
+  gap: 1rem;       
+}
+.content_forms_login{
+  margin: auto;
+  width: 30%;
+  
+}
+.form_vincular_categoria{
+  width: 100%;
+}
+.form_vincular_categoria h4{
+  color: var(--bs-gray);
+}
+.content_forms_categoria{
+  margin: auto;
+  width: 50%;
+}
+.divs_btn_tabela{
+  width: 100%;
+  display: flex;
+  padding:5%;
+  gap: 8px; /* espaço entre os botões */
+  justify-content: center;
+}
+.div_tabelas h4{
+  color: var(--bs-gray);
+  text-align: left;
+}
+.table-bordered th , td{
+  font-size: 11px;
+}
+.table-bordered th , td{
+  font-size: 9px;
+}
+.table-scrollable {
+  max-height: 500px; /* Ajuste conforme necessário */
+  overflow-y: auto;
+}
+
+table thead th {
+  position: sticky;
+  top: 0;
+  background-color: #343a40; /* Cor de fundo da tabela-dark do Bootstrap */
+  color: white;
+  z-index: 2;
+}
+span{
+  display: flex;
+}
+span a{
+  margin-left: 37%;
+}
+
+
+

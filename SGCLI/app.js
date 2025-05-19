@@ -79,15 +79,15 @@ app.use((req, res, next) => {
 // Rota raiz
 
 app.get('/', (req, res) => {
-    res.render('login/login',{ message: "", type: "danger" });
+    res.render('new/login',{ message: "", type: "" });
 });
 app.get('/sistem', (req, res) => {
-  res.render('homepage',{ message: "", type: "danger" });
+  res.render('new/home',{ message: "", type: "" });
 });
 //rotas login
 
 app.get('/login',(req,res)=>{
-  res.render('login/login', { message: "", type: "danger" })
+  res.render('new/login', { message: "", type: "danger" })
 })
 
 app.post('/login', (req, res, next) => {
@@ -95,9 +95,9 @@ app.post('/login', (req, res, next) => {
 
   // Validação simples dos campos
   if (!cpf || !senha) {
-    return res.render('login/login', {
+    return res.render('new/login', {
       message: 'Preencha todos os campos.',
-      type: 'danger'
+      type: 'alert alert-danger'
     });
   }
 
@@ -109,9 +109,9 @@ app.post('/login', (req, res, next) => {
 
     if (!user) {
       // Autenticação falhou, retorna mensagem personalizada
-      return res.render('login/login', {
+      return res.render('new/login', {
         message: info?.message || 'CPF ou senha inválidos.',
-        type: 'danger'
+        type: 'alert alert-danger'
       });
     }
 
@@ -132,7 +132,7 @@ app.get('/logout', (req, res) => {
 });
 //usuarios
 app.get('/novousuario',(req,res)=>{
-  res.render('login/cadastrar_user' , { message: "", type: "danger" })
+  res.render('new/criar_usuario' , { message: "", type: "danger" })
 })
 
 app.post('/novousuario', async (req, res) => {
@@ -141,18 +141,18 @@ app.post('/novousuario', async (req, res) => {
   try {
     // Verifica campos obrigatórios
     if (!nome || !sobrenome || !senha || !cpf) {
-      return res.render('login/cadastrar_user', {
+      return res.render('new/criar_usuario', {
         message: "Informe todos os campos para realizar o cadastro",
-        type: "danger"
+        type: "alert alert-danger"
       });
     }
 
     // Verifica se já existe usuário com esse CPF
     const usuarioExistente = await Usuario.findOne({ where: { cpf } });
     if (usuarioExistente) {
-      return res.render('login/cadastrar_user', {
+      return res.render('new/criar_usuario', {
         message: "Usuário já cadastrado",
-        type: "danger"
+        type: "alert alert-danger"
       });
     }
 
@@ -167,9 +167,9 @@ app.post('/novousuario', async (req, res) => {
       cpf
     });
 
-    return res.render('login/cadastrar_user', {
+    return res.render('new/login', {
       message: "Novo usuário cadastrado com sucesso",
-      type: "sucess" // <-- corrigido
+      type: "alert alert-success" // <-- corrigido
     });
 
   } catch (error) {
@@ -184,15 +184,16 @@ app.get('/usuarios',ensureAuthenticated  ,async(req,res)=>{
   try {
     const user = await Usuario.findAll();
     if(user){
-     return res.render('tabela_usuarios',{Usuarios:user,message:"Registros carregadoscomsucesso", type:"sucess"})
+     return res.render('new/tabela_usuario',{Usuarios:user,message:"Registros carregados com sucesso", type:"alert alert-success"})
     }else{
-      return res.render('tabela_usuarios',{Usuarios:user,message:"Nãohá usuarios cadastrados", type:"danger"})
+      return res.render('tabela_usuarios',{Usuarios:user,message:"Nãohá usuarios cadastrados", type:"alert alert-danger"})
     }
   
   } catch (error) {
-    return res.render('tabela_usuarios',{Usuarios:user,message:"Erro ao pesquisar usuarios", type:"danger"})
+    return res.render('tabela_usuarios',{Usuarios:user,message:"Erro ao pesquisar usuarios", type:"alert alert-danger"})
   }
 })
+
 //Cadastrar Cliente
 app.get('/clientes',ensureAuthenticated ,(req,res)=>{
   Cliente.findAll({
@@ -201,44 +202,44 @@ app.get('/clientes',ensureAuthenticated ,(req,res)=>{
   
     ]
   }).then( (cliente)=>{
-    res.render('tabela_clientes',{ Clientes:cliente, message: "Registros carregados com sucesso ...", type: "sucess" })
+    res.render('new/tabela_cliente',{ Clientes:cliente, message: "Registros carregados com sucesso!", type: "alert alert-success" })
   })
   
 })
 app.get('/novocliente',ensureAuthenticated ,(req, res)=>{
-  res.render('cadastrar_cliente', {  message: "", type: "sucess" })
+  res.render('new/criar_cliente', {  message: "", type: "" })
 })
 app.post('/novocliente',ensureAuthenticated , async (req, res) => {
   try {
     // Verifica se o campo 'cliente' está vazio
     if (!req.body.cliente || req.body.cliente.trim() === '') {
-      return res.render('cadastrar_cliente', { message: "O campo cliente não pode estar vazio!", type: "danger" });
+      return res.render('cadastrar_cliente', { message: "O campo cliente não pode estar vazio!", type: "alert alert-danger" });
     }
 
     // Verifica se o valor do campo 'cliente' não é um número
     if (!isNaN(req.body.cliente)) {
-      return res.render('cadastrar_cliente', { message: "O campo cliente não pode ser um número!", type: "danger" });
+      return res.render('new/criar_cliente', { message: "O campo cliente não pode ser um número!", type: "alert alert-danger" });
     }
 
     // Verifica se o cliente já existe
     const client = await Cliente.findOne({ where: { cliente: req.body.cliente ,  } });
     if (client) {
-      return res.render('cadastrar_cliente', { message: "Cliente já cadastrado!", type: "danger" });
+      return res.render('new/criar_cliente', { message: "Cliente já cadastrado!", type: "alert alert-danger" });
     } else {
       // Cria um novo cliente
       await Cliente.create({ cliente: req.body.cliente ,userId: req.user.id });
-      return res.render('cadastrar_cliente', { message: "Cadastrado com sucesso!", type: "sucess" });
+      return res.render('new/criar_cliente', { message: "Cadastrado com sucesso!", type: "alert alert-success" });
     }
   } catch (error) {
     console.log(error);
-    return res.render('cadastrar_cliente', { message: "Erro ao cadastrar", error: error.message, type: "danger" });
+    return res.render('new/criar_cliente', { message: "Erro ao cadastrar", error: error.message, type: "alert alert-danger" });
   }
 });
 
 //cadastrar categoria
 app.get('/cadastrarcategoria',ensureAuthenticated ,async(req,res)=>{
   Cliente.findAll().then((cl)=>{
-    res.render('cadastrar_categoria',{Categoria:cl,message:"",type:""})
+    res.render('new/criar_categoria',{Cliente:cl,message:"",type:""})
   })
 })
 app.post('/novacategoria', ensureAuthenticated, async (req, res) => {
@@ -248,44 +249,46 @@ app.post('/novacategoria', ensureAuthenticated, async (req, res) => {
     // Verifica se o campo 'categoria' está vazio
     if (!categoriaInput) {
       const cl = await Cliente.findAll();
-      return res.render('cadastrar_categoria', {
-        Categoria: cl,
+      return res.render('new/criar_categoria', {
+        Cliente: cl,
         message: "O campo categoria não pode estar vazio!",
-        type: "danger"
+        type: "alert alert-danger"
       });
     }
 
     // Verifica se o valor do campo 'categoria' não é um número
     if (!isNaN(categoriaInput)) {
       const cl = await Cliente.findAll();
-      return res.render('cadastrar_categoria', {
-        Categoria: cl,
+      return res.render('new/criar_categoria', {
+        Cliente: cl,
         message: "O campo categoria não pode ser um número!",
-        type: "danger"
+        type: "alert alert-danger"
       });
     }
 
     // Verifica se a categoria já existe
-    const categoriaExistente = await Categoria.findOne({ where: { categoria: categoriaInput, userId: req.user.id } });
+    const categoriaExistente = await Categoria.findOne({ where: { categoria: categoriaInput } });
 
     if (categoriaExistente) {
       const cl = await Cliente.findAll();
-      return res.render('cadastrar_categoria', {
-        Categoria: cl,
+      return res.render('new/criar_categoria', {
+        Cliente: cl,
         message: "Categoria já cadastrada!",
-        type: "danger"
+        type: "alert alert-danger"
       });
     }
 
-  
+
     // Cria uma nova categoria
-    await Categoria.create({idcliente: req.body.idcliente , categoria: categoriaInput, userId: req.user.id });
+    await Categoria.create({idcliente: req.body.clienteId , 
+      categoria: categoriaInput, 
+      userId: req.user.id });
 
     const cl = await Cliente.findAll(); // caso necessário para o render da próxima página
-    return res.render('cadastrar_categoria', {
-      Categoria: cl,
+    return res.render('new/criar_categoria', {
+      Cliente: cl,
       message: "Cadastrado com sucesso!",
-      type: "sucess"
+      type: "alert alert-success"
     });
 
 
@@ -293,11 +296,11 @@ app.post('/novacategoria', ensureAuthenticated, async (req, res) => {
   catch (error) {
     console.error(error);
     const cl = await Cliente.findAll();
-    return res.render('cadastrar_categoria', {
-      Categoria: cl,
+    return res.render('new/criar_categoria', {
+      Cliente: cl,
       message: "Erro ao cadastrar",
       error: error.message,
-      type: "danger"
+      type: "alert alert-danger"
     });
   }
 });
@@ -305,7 +308,7 @@ app.post('/novacategoria', ensureAuthenticated, async (req, res) => {
 //cadastrar subcategoria
 app.get('/cadastrarsubcategoria',ensureAuthenticated ,async(req,res)=>{
   Categoria.findAll().then((cate)=>{
-    res.render('cadastrar_subcategoria',{Cate:cate,message:'',type:''})
+    res.render('new/criar_subcategoria',{Categoria:cate,message:'',type:''})
   })
   
 })
@@ -317,20 +320,20 @@ app.post('/novasubcategoria', ensureAuthenticated, async (req, res) => {
     // Validação: campo vazio
     if (!req.body.subcategoria) {
       const cate = await Categoria.findAll();
-      return res.render('cadastrar_subcategoria', {
-        Cate:cate,
+      return res.render('new/criar_subcategoria', {
+        Categoria:cate,
         message: "O campo subcategoria não pode estar vazio!",
-        type: "danger"
+        type: "alert alert-danger"
       });
     }
 
     // Validação: campo numérico
     if (!isNaN(req.body.subcategoria)) {
       const cate = await Categoria.findAll();
-      return res.render('cadastrar_subcategoria', {
-        Cate:cate,
+      return res.render('new/criar_subcategoria', {
+        Categoria:cate,
         message: "O campo subcategoria não pode ser um número!",
-        type: "danger"
+        type: "alert alert-danger"
       });
     }
 
@@ -339,38 +342,40 @@ app.post('/novasubcategoria', ensureAuthenticated, async (req, res) => {
 
     if (s_subcategoria) {
       const cate = await Categoria.findAll();
-      return res.render('cadastrar_subcategoria', {
-        Cate:cate,
+      return res.render('new/criar_subcategoria', {
+        Categoria:cate,
         message: "Subcategoria já cadastrada!",
-        type: "danger"
+        type: "alert alert-danger"
       });
     }
 
 
     // Criação da subcategoria
-    await Subcategoria.create({ idcategoria: req.body.idcategoria,subcategoria: req.body.subcategoria , userId: req.user.id });
+    await Subcategoria.create({ idcategoria: req.body.categoriaId,
+      subcategoria: req.body.subcategoria , 
+      userId: req.user.id });
 
     const cate = await Categoria.findAll();
-    return res.render('cadastrar_subcategoria', {
-      Cate:cate,
+    return res.render('new/criar_subcategoria', {
+      Categoria:cate,
       message: "Cadastrado com sucesso!",
-      type: "sucess"
+      type: "alert alert-success"
     });
 
   } catch (error) {
     const cate = await Categoria.findAll();
-    return res.render('cadastrar_subcategoria', {
-      Cate:cate,
+    return res.render('new/criar_subcategoria', {
+      Categoria:cate,
       message: "Erro ao cadastrar",
       error: error.message,
-      type: "danger"
+      type: "alert alert-danger"
     });
   }
 });
 
 //Cadastrar lote
 app.get('/criarlote', ensureAuthenticated ,async(req,res)=>{
-  res.render('cadastrar_lote', { message: "", type: "" })
+  res.render('new/criar_lote', { message: "", type: "" })
 })
 app.get('/lotescadastrados',ensureAuthenticated ,async(req,res)=>{
   const lotes = await Lote.findAll({
@@ -380,13 +385,13 @@ app.get('/lotescadastrados',ensureAuthenticated ,async(req,res)=>{
   });
 try {
   if(lotes){
-    return res.render('tabela_lotes',{ Lotes:lotes,  message: "Registros carregados com sucesso..", type: "sucess" })
+    return res.render('new/tabela_lotes',{ Lotes:lotes,  message: "Registros carregados com sucesso..", type: "alert alert-success" })
    }
   if(lotes.length === 0){
-   return res.render('tabela_lotes',{ Lotes:lotes,  message: "Não há lotes cadastrados", type: "danger" })
+   return res.render('new/tabela_lotes',{ Lotes:lotes,  message: "Não há lotes cadastrados", type: "alert alert-danger" })
   }
 } catch (error) {
-      return res.render('tabela_lotes',{ Lotes:lotes,  message: "Erro ao buscar registros", type: "danger" })
+      return res.render('new/tabela_lotes',{ Lotes:lotes,  message: "Erro ao buscar registros", type: "alert alert-danger" })
   }
 });
 
@@ -395,19 +400,19 @@ app.post('/novolote', ensureAuthenticated ,async (req,res)=>{
   const lote = await Lote.findOne({ where: { n_lote: req.body.n_lote } });
   try {
     if (!req.body.n_lote) {
-      return res.render('cadastrar_lote', { message: "Informe todos os campos!", type: "danger" });
+      return res.render('new/criar_lote', { message: "Informe todos os campos!", type: "alert alert-danger" });
      };
   
     if(lote){
-      return res.render('cadastrar_lote', { message: "Lote ja cadastrado!", type: "danger" });
+      return res.render('new/criar_lote', { message: "Lote ja cadastrado!", type: "alert alert-danger" });
     } 
     else {
       await Lote.create({ n_lote: req.body.n_lote , userId: req.user.id });
-      res.render('cadastrar_lote', { message: "Cadastrado com sucesso!", type: "sucess" });
+      res.render('new/criar_lote', { message: "Cadastrado com sucesso!", type: "alert alert-success" });
     }
     
   } catch (error) {
-    res.render('cadastrar_lote', { message: "Erro ao cadastrar",  type: "danger" });
+    res.render('new/criar_lote', { message: "Erro ao cadastrar",  type: "alert alert-danger" });
     console.log(error);
     
   }
@@ -424,7 +429,7 @@ app.get('/cadastrardocumento',ensureAuthenticated , async (req, res) => {
     ]);
 
     // Render the view with the fetched data
-    res.render('cadastrar_documento', {
+    res.render('new/criar_cadastro_documento', {
       message: "",
       type: "",
       Td: tipodocumento,
@@ -440,7 +445,7 @@ app.get('/cadastrardocumento',ensureAuthenticated , async (req, res) => {
     ]);
 
     console.error('Error fetching data:', error);
-    res.render('cadastrar_documento', { message: "Erro ao cadastrar", type: "danger"});
+    res.render('new/criar_cadastro_documento', { message: "Erro ao cadastrar", type: "alert alert-danger"});
   }
 });
 
@@ -451,13 +456,13 @@ app.post('/cadastrardocumento',ensureAuthenticated , async (req, res) => {
           const [tipodocumento, cliente, lote] = await Promise.all([
               Tipodocumento.findAll(),
               Cliente.findAll(),
-              Lote.findAll({where: { localidade: "lotedisponive" }})
+              Lote.findAll({where: { localidade: "lotedisponivel" }})
           ]);
          
           // Renderiza a página novamente com a mensagem de erro
-          res.render('cadastrar_documento', {
+          res.render('new/criar_cadastro_documento', {
               message: "Preencha todos os campos!",
-              type: "danger",
+              type: "alert alert-danger",
               Td: tipodocumento,
               Cl: cliente,
               Lt: lote
@@ -478,9 +483,9 @@ app.post('/cadastrardocumento',ensureAuthenticated , async (req, res) => {
           });
 
           // Redireciona ou renderiza uma página de sucesso
-          res.render('cadastrar_documento', {
+          res.render('new/criar_cadastro_documento', {
               message: "Documento cadastrado com sucesso!",
-              type: "sucess",
+              type: "alert alert-success",
               Td: await Tipodocumento.findAll(),
               Cl: await Cliente.findAll(),
               Lt: await Lote.findAll({where: { localidade: "lotedisponivel" }})
@@ -495,16 +500,17 @@ app.post('/cadastrardocumento',ensureAuthenticated , async (req, res) => {
   ]);
   console.log(error)
   // Renderiza a página novamente com a mensagem de erro
-  res.render('cadastrar_documento', {
+  res.render('new/criar_cadastro_documento', {
       message: "Ocorreu um erro ao processar a requisição ",
-      type: "danger",
+      type: "alert alert-danger",
       Td: tipodocumento,
       Cl: cliente,
       Lt: lote
   }); 
   
   }
-});
+}
+);
 app.get('/documentoscatalogados',ensureAuthenticated , async (req, res) => {
   try {
     
@@ -523,18 +529,18 @@ app.get('/documentoscatalogados',ensureAuthenticated , async (req, res) => {
       }),
     ]);
     if (!documento) {
-      res.render('tabela_documentos_cadastrados', {
+      res.render('new/tabela_documentos', {
         message: "Registros carregados com sucesso",
-        type: "danger",
+        type: "alert alert-danger",
         Td: tipodocumento,
         Cl: cliente,
         Lt: lote,
         Cdr: documento
       });
     } else {
-      res.render('tabela_documentos_cadastrados', {
+      res.render('new/tabela_documentos', {
         message: "Registros carregados com sucesso",
-        type: "sucess",
+        type: "alert alert-success",
         Td: tipodocumento,
         Cl: cliente,
         Lt: lote,
@@ -558,9 +564,9 @@ app.get('/documentoscatalogados',ensureAuthenticated , async (req, res) => {
       ]}),
     ]);
 
-    res.render('tabela_documentos_cadastrados', {
+    res.render('new/tabela_documento', {
       message: "Erro ao carregar registros...",
-      type: "danger",
+      type: "alert alert-danger",
       Td: tipodocumento,
       Cl: cliente,
       Lt: lote,
@@ -574,24 +580,24 @@ app.post('/criartipodocumento',ensureAuthenticated ,async(req,res)=>{
 
   try {
     if(!req.body.tipodocumento){
-      res.render('cadastrar_tipo_documento', { message: " Preencha todos os campos!", type: "danger" });
+      res.render('new/criar_tipo_documental', { message: " Preencha todos os campos!", type: "alert alert-danger" });
     };
     const client = await Tipodocumento.findOne({ where: { tipodocumento: req.body.tipodocumento } });
     if (client) {
-      res.render('cadastrar_tipo_documento', { message: " Tipo de documento ja cadastrado!", type: "danger" });
+      res.render('new/criar_tipo_documental', { message: " Tipo de documento ja cadastrado!", type: "alert alert-danger" });
     } else {
       await Tipodocumento.create({ tipodocumento: req.body.tipodocumento, userId: req.user.id  });
-      res.render('cadastrar_tipo_documento', { message: "Cadastrado com sucesso!", type: "sucess" });
+      res.render('new/criar_tipo_documental', { message: "Cadastrado com sucesso!", type: "alert alert-success" });
     }
     
   } catch (error) {
     console.log(error);
-      res.render('cadastrar_tipo_documento', { message: "Erro ao cadastrar", error: error.message, type: "danger" });
+      res.render('new/criar_tipo_documental', { message: "Erro ao cadastrar", error: error.message, type: "alert alert-danger" });
   }
   
 })
 app.get('/criartipodocumento', ensureAuthenticated ,async(req,res)=>{
-  res.render('cadastrar_tipo_documento', { message: "", type: ""})
+  res.render('new/criar_tipo_documental', { message: "", type: ""})
   
 })
 app.get('/tiposdocumentais',ensureAuthenticated , async(req,res)=>{
@@ -625,24 +631,24 @@ app.get('/estruturacadastradas', ensureAuthenticated, async (req, res) => {
       ]
     });
 
-    res.render('tabela_estrutura', {
+    res.render('new/tabela_estrutura', {
       Estrutura: clientes,
-      message: "Dados carregados com sucesso",
-      type: "sucess"
+      message: "Dados carregados com sucesso!",
+      type: "alert alert-success"
     });
   } catch (err) {
     console.error(err);
-    res.render('tabela_estrutura', {
+    res.render('new/tabela_estrutura', {
       Estrutura: [],
       message: "Erro ao carregar dados",
-      type: "danger"
+      type: "alert alert-danger"
     });
   }
 });
 
 //Coleta
 app.get('/coletanoclient',ensureAuthenticated , async(req,res)=>{
-  res.render('cadastrar_movimento_coleta', { message: "", type: ""})
+  res.render('new/criar_coleta', { message: "", type: ""})
 
 })
 
@@ -651,27 +657,27 @@ app.post('/coletar', ensureAuthenticated, async (req, res) => {
     const { n_rfid, localidade } = req.body;
 
     if (!n_rfid) {
-      return res.render('cadastrar_movimento_coleta', {
+      return res.render('new/criar_coleta', {
         message: "Preencha todos os campos.",
-        type: "danger"
+        type: "alert alert-danger"
       });
     }
 
     const rfid = await Vincular.findAll({ where: { n_rfid } });
 
     if (rfid.length === 0) {
-      return res.render('cadastrar_movimento_coleta', {
+      return res.render('new/criar_coleta', {
         message: "A caixa informada não foi devidamente processada nas etapas: Finalizar-lote & Vincular-caixas",
-        type: "danger"
+        type: "alert alert-danger"
       });
     }
 
     // Verifica se o RFID já foi coletado
     const coletado = await Movimento.findOne({ where: { n_rfid } });
     if (coletado) {
-      return res.render('cadastrar_movimento_coleta', {
+      return res.render('new/criar_coleta', {
         message: "Caixa já coletada!",
-        type: "danger"
+        type: "alert alert-danger"
       });
     }
 
@@ -681,16 +687,16 @@ app.post('/coletar', ensureAuthenticated, async (req, res) => {
       localidade
     });
 
-    return res.render('cadastrar_movimento_coleta', {
+    return res.render('new/criar_coleta', {
       message: "Movimento de coleta cadastrado",
-      type: "sucess"
+      type: "alert alert-success"
     });
 
   } catch (error) {
     console.error(error);
-    return res.render('cadastrar_movimento_coleta', {
+    return res.render('new/criar_coleta', {
       message: "Erro ao processar solicitação",
-      type: "danger"
+      type: "alert alert-danger"
     });
   }
 });
@@ -698,7 +704,7 @@ app.post('/coletar', ensureAuthenticated, async (req, res) => {
 
 //Receber
 app.get('/recebimentoarmazem',ensureAuthenticated , async(req,res)=>{
-  res.render('cadastrar_movimento_recebimento', { message: "", type: ""})
+  res.render('new/criar_recebimento', { message: "", type: ""})
   
 })
 
@@ -707,9 +713,9 @@ app.post('/recebimento', ensureAuthenticated, async (req, res) => {
     const { n_rfid, localidade } = req.body;
 
     if (!n_rfid || !localidade) {
-      return res.render('cadastrar_movimento_recebimento', {
+      return res.render('new/criar_recebimento', {
         message: "Preencha todos os campos.",
-        type: "danger"
+        type: "alert alert-danger"
       });
     }
 
@@ -717,9 +723,9 @@ app.post('/recebimento', ensureAuthenticated, async (req, res) => {
     const caixaColetada = await movicaixa.findOne({ where: { n_rfid, localidade: 'caixacoletada' } });
 
     if (!caixaColetada) {
-      return res.render('cadastrar_movimento_recebimento', {
+      return res.render('new/criar_recebimento', {
         message: "A caixa não está disponível para recebimento. Verifique se ela foi coletada.",
-        type: "danger"
+        type: "alert alert-danger"
       });
     }
 
@@ -727,9 +733,9 @@ app.post('/recebimento', ensureAuthenticated, async (req, res) => {
     const caixaRecebida = await movicaixa.findOne({ where: { n_rfid, localidade: 'caixarecebida' } });
 
     if (caixaRecebida) {
-      return res.render('cadastrar_movimento_recebimento', {
+      return res.render('new/criar_recebimento', {
         message: "Caixa já recebida.",
-        type: "danger"
+        type: "alert alert-danger"
       });
     }
 
@@ -740,16 +746,16 @@ app.post('/recebimento', ensureAuthenticated, async (req, res) => {
       localidade  // 'caixarecebida' vindo do formulário
     });
 
-    return res.render('cadastrar_movimento_recebimento', {
+    return res.render('new/criar_recebimento', {
       message: "Movimento de recebimento cadastrado com sucesso.",
-      type: "sucess"
+      type: "alert alert-success"
     });
 
   } catch (error) {
     console.error(error);
-    return res.render('cadastrar_movimento_recebimento', {
+    return res.render('new/criar_recebimento', {
       message: "Erro ao processar solicitação.",
-      type: "danger"
+      type: "alert alert-danger"
     });
   }
 });
@@ -760,14 +766,14 @@ app.get('/vincularlotecaixa', ensureAuthenticated ,async(req,res)=>{
 try {
     const lotess =  await Lote.findAll({where: { localidade: "loteavincular" }});
   if (!lotess || lotess.length === 0) {
-    res.render('cadastrar_vinculos',{ Lote:lotess,  message: "Não ha lotes disponiveis..", type: "danger" })
+    res.render('new/criar_vinculo',{ Lote:lotess,  message: "Não ha lotes disponiveis..", type: "alert alert-danger" })
   } else {
-    res.render('cadastrar_vinculos',{ Lote:lotess,  message: "Lotes carregados com sucesso..", type: "sucess" })
+    res.render('new/criar_vinculo',{ Lote:lotess,  message: "Lotes carregados com sucesso..", type: "alert alert-success" })
 
   }
 } catch (error) {
   const lotess =  await Lote.findAll();
-    res.render('cadastrar_vinculos',{ Lote:lotess,  message: "Erro ao buscar lotes..", type: "sucess" })
+    res.render('new/criar_vinculo',{ Lote:lotess,  message: "Erro ao buscar lotes..", type: "alert alert-success" })
 }
 })
 
@@ -779,20 +785,20 @@ app.post('/criarvinculo', ensureAuthenticated, async (req, res) => {
 
     // Validação de campos obrigatórios
     if (!lote || !n_caixa || !n_caixa_secundary || !n_rfid) {
-      return res.render('cadastrar_vinculos', {
+      return res.render('new/criar_vinculo', {
         Lote: lotess,
         message: "Preencha todos os campos",
-        type: "danger"
+        type: "alert alert-danger"
       });
     }
 
     // Verifica se já há mais de 3 vínculos para esse RFID
     const vinculados = await Vincular.findAll({ where: { n_rfid } });
     if (vinculados.length >= 3) {
-      return res.render('cadastrar_vinculos', {
+      return res.render('new/criar_vinculo', {
         Lote: lotess,
         message: "O RFID já está vinculado a três lotes!",
-        type: "danger"
+        type: "alert alert-danger"
       });
     }
 
@@ -813,18 +819,18 @@ app.post('/criarvinculo', ensureAuthenticated, async (req, res) => {
 
     const lotenew = await Lote.findAll({ where: { localidade: "loteavincular" } });
 
-    return res.render('cadastrar_vinculos', {
+    return res.render('new/criar_vinculo', {
       Lote: lotenew,
       message: "Vinculado com sucesso",
-      type: "sucess"
+      type: "alert alert-success"
     });
 
   } catch (error) {
     console.error(error);
-    return res.render('cadastrar_vinculos', {
+    return res.render('new/criar_vinculo', {
       Lote: lotess,
       message: "Erro ao vincular",
-      type: "danger"
+      type: "alert alert-danger"
     });
   }
 });
@@ -877,12 +883,12 @@ app.get('/classificar',ensureAuthenticated,async (req,res)=>{
   try {
     if (!lotes || lotes.length === 0) {
       
-        return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Não há lotes disponiveis para processar", type:"danger"})
+        return res.render('new/criar_classificação', {Lt: lotes, message:"Não há lotes disponiveis para processar", type:"alert alert-danger"})
     } else {
-      return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Lotes disponiveis para processamento", type:"sucess"})
+      return res.render('new/criar_classificação', {Lt: lotes, message:"Lotes disponiveis para processamento", type:"alert alert-success"})
     }
   } catch (error) {
-    return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Erro ao processar", type:"danger"})
+    return res.render('new/criar_classificação', {Lt: lotes, message:"Erro ao processar", type:"alert alert-danger"})
   }
 })
 app.post('/classificar',async(req,res)=>{
@@ -891,11 +897,11 @@ app.post('/classificar',async(req,res)=>{
   const idlote = req.body.lote
   try {
     if (!req.body.lote ||!req.body.localidade|| !req.body.qtdfolhas) {
-      return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Preencha todos so campos!", type:"danger"})
+      return res.render('new/criar_classificação', {Lt: lotes, message:"Preencha todos so campos!", type:"alert alert-danger"})
     } else {
       const lotedb =  await Movifluxolote.findAll({where:{n_loteId:idlote }});
       if (lotedb.length > 0) {
-        return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Movimento ja cadastrado para este lote", type:"danger"})
+        return res.render('new/criar_classificação', {Lt: lotes, message:"Movimento ja cadastrado para este lote", type:"alert alert-danger"})
       } else {
        await Movifluxolote.create({
           n_loteId: req.body.lote,
@@ -909,27 +915,26 @@ app.post('/classificar',async(req,res)=>{
         )
         await Lote.findAll({where:{localidade: "vinculado"}})
         .then((lote)=>{
-          return res.render('cadastrar_movimento_classificacao', {Lt: lote, message:"Cadastro de movimento lotes registrado com sucesso!", type:"sucess"})
+          return res.render('new/criar_classificação', {Lt: lote, message:"Cadastro de movimento lotes registrado com sucesso!", type:"alert alert-success"})
         })
       }
       
     }
   } catch (error) {
-    return res.render('cadastrar_movimento_classificacao', {Lt: lotes, message:"Erro ao registrar dados", type:"danger"})
+    return res.render('new/criar_classificação', {Lt: lotes, message:"Erro ao registrar dados", type:"alert alert-danger"})
   }
 })
-
 //preparacao
 app.get('/preparar',ensureAuthenticated,async (req,res)=>{
   const lotes =  await Lote.findAll({where:{localidade: "loteclassificado"}});
   try {
     if (!lotes || lotes.length === 0) {
-        return res.render('cadastrar_movimento_preparacao', {Lt: lotes, message:"Não há lotes disponiveis para processar", type:"danger"})
+        return res.render('new/criar_preparacao', {Lt: lotes, message:"Não há lotes disponiveis para processar", type:"alert alert-danger"})
     } else {
-      return res.render('cadastrar_movimento_preparacao', {Lt: lotes, message:"Lotes disponiveis para processamento", type:"sucess"})
+      return res.render('new/criar_preparacao', {Lt: lotes, message:"Lotes disponiveis para processamento", type:"alert alert-success"})
     }
   } catch (error) {
-    return res.render('cadastrar_movimento_preparacao', {Lt: lotes, message:"Erro ao processar", type:"danger"})
+    return res.render('new/criar_preparacao', {Lt: lotes, message:"Erro ao processar", type:"alert alert-danger"})
   }
 })
 app.post('/preparar',async(req,res)=>{
@@ -937,7 +942,7 @@ app.post('/preparar',async(req,res)=>{
   const idlote = req.body.lote
   try {
     if (!req.body.lote ||!req.body.localidade|| !req.body.qtdfolhas) {
-      return res.render('cadastrar_movimento_preparacao', {Lt: lotes, message:"Preencha todos so campos!", type:"danger"})
+      return res.render('new/criar_preparacao', {Lt: lotes, message:"Preencha todos so campos!", type:"alert alert-danger"})
     } else {
        {
        await Movifluxolote.create({
@@ -952,13 +957,13 @@ app.post('/preparar',async(req,res)=>{
         )
          await Lote.findAll({where:{localidade: "loteclassificado"}})
         .then((lote)=>{
-        return res.render('cadastrar_movimento_preparacao', {Lt: lote, message:"Cadastro de movimento lotes registrado com sucesso!", type:"sucess"})
+        return res.render('new/criar_preparacao', {Lt: lote, message:"Cadastro de movimento lotes registrado com sucesso!", type:"alert alert-success"})
       });
       }
       
     }
   } catch (error) {
-    return res.render('cadastrar_movimento_preparacao', {Lt: lotes, message:"Erro ao registrar dados", type:"danger"})
+    return res.render('new/criar_preparacao', {Lt: lotes, message:"Erro ao registrar dados", type:"alert alert-danger"})
   }
 })
 //digitalizar
@@ -966,12 +971,12 @@ app.get('/digitalizar',ensureAuthenticated,async (req,res)=>{
   const lotes =  await Lote.findAll({where:{localidade: "lotepreparado"}});
   try {
     if (!lotes || lotes.length === 0) {
-        return res.render('cadastrar_movimento_digitalizado', {Lt: lotes, message:"Não há lotes disponiveis para processar", type:"danger"})
+        return res.render('new/criar_digitalização', {Lt: lotes, message:"Não há lotes disponiveis para processar", type:"alert alert-danger"})
     } else {
-      return res.render('cadastrar_movimento_digitalizado', {Lt: lotes, message:"Lotes disponiveis para processamento", type:"sucess"})
+      return res.render('new/criar_digitalizaçãoo', {Lt: lotes, message:"Lotes disponiveis para processamento", type:"alert alert-success"})
     }
   } catch (error) {
-    return res.render('cadastrar_movimento_digitalizado', {Lt: lotes, message:"Erro ao processar", type:"danger"})
+    return res.render('new/criar_digitalização', {Lt: lotes, message:"Erro ao processar", type:"alert alert-danger"})
   }
 })
 app.post('/digitalizar',async(req,res)=>{
@@ -979,7 +984,7 @@ app.post('/digitalizar',async(req,res)=>{
   const idlote = req.body.lote
   try {
     if (!req.body.lote ||!req.body.localidade|| !req.body.qtdfolhas) {
-      return res.render('cadastrar_movimento_digitalizado', {Lt: lotes, message:"Preencha todos so campos!", type:"danger"})
+      return res.render('new/criar_digitalização', {Lt: lotes, message:"Preencha todos so campos!", type:"alert alert-danger"})
     } else {
        {
        await Movifluxolote.create({
@@ -994,13 +999,13 @@ app.post('/digitalizar',async(req,res)=>{
         )
         await Lote.findAll({where:{localidade: "lotepreparado"}})
         .then((lote)=>{
-        return res.render('cadastrar_movimento_digitalizado', {Lt: lote, message:"Cadastro de movimento lotes registrado com sucesso!", type:"sucess"})
+        return res.render('new/criar_digitalização', {Lt: lote, message:"Cadastro de movimento lotes registrado com sucesso!", type:"alert alert-success"})
       });
       }
       
     }
   } catch (error) {
-    return res.render('cadastrar_movimento_preparacao', {Lt: lotes, message:"Erro ao registrar dados", type:"danger"})
+    return res.render('new/criar_digitalização', {Lt: lotes, message:"Erro ao registrar dados", type:"alert alert-danger"})
   }
 })
 //controle
@@ -1008,12 +1013,12 @@ app.get('/controle',ensureAuthenticated,async (req,res)=>{
   const lotes =  await Lote.findAll({where:{localidade: "lotedigitalizado"}});
   try {
     if (!lotes || lotes.length === 0) {
-        return res.render('cadastrar_movimento_controlado', {Lt: lotes, message:"Não há lotes disponiveis para processar", type:"danger"})
+        return res.render('new/criar_controle', {Lt: lotes, message:"Não há lotes disponiveis para processar", type:"alert alert-danger"})
     } else {
-      return res.render('cadastrar_movimento_controlado', {Lt: lotes, message:"Lotes disponiveis para processamento", type:"sucess"})
+      return res.render('new/criar_controle', {Lt: lotes, message:"Lotes disponiveis para processamento", type:"alert alert-success"})
     }
   } catch (error) {
-    return res.render('cadastrar_movimento_controlado', {Lt: lotes, message:"Erro ao processar", type:"danger"})
+    return res.render('new/criar_controle', {Lt: lotes, message:"Erro ao processar", type:"alert alert-danger"})
   }
 })
 app.post('/controle',async(req,res)=>{
@@ -1021,7 +1026,7 @@ app.post('/controle',async(req,res)=>{
   const idlote = req.body.lote
   try {
     if (!req.body.lote ||!req.body.localidade|| !req.body.qtdfolhas) {
-      return res.render('cadastrar_movimento_controlado', {Lt: lotes, message:"Preencha todos so campos!", type:"danger"})
+      return res.render('new/criar_controle', {Lt: lotes, message:"Preencha todos so campos!", type:"alert alert-danger"})
     } else {
        {
        await Movifluxolote.create({
@@ -1036,13 +1041,13 @@ app.post('/controle',async(req,res)=>{
         )
         await Lote.findAll({where:{localidade: "lotedigitalizado"}})
         .then((lote)=>{
-        return res.render('cadastrar_movimento_controlado', {Lt: lote, message:"Cadastro de movimento lotes registrado com sucesso!", type:"sucess"})
+        return res.render('new/criar_controle', {Lt: lote, message:"Cadastro de movimento lotes registrado com sucesso!", type:"alert alert-success"})
       });
       }
       
     }
   } catch (error) {
-    return res.render('cadastrar_movimento_controlado', {Lt: lotes, message:"Erro ao registrar dados", type:"danger"})
+    return res.render('new/criar_controle', {Lt: lotes, message:"Erro ao registrar dados", type:"alert alert-danger"})
   }
 })
 //plantas
@@ -1050,12 +1055,12 @@ app.get('/plantas',ensureAuthenticated,async (req,res)=>{
   const lotes =  await Lote.findAll({where:{localidade: "loteplantas"}});
   try {
     if (!lotes || lotes.length === 0) {
-        return res.render('cadastrar_movimento_plantas', {Lt: lotes, message:"Não há lotes disponiveis para processar", type:"danger"})
+        return res.render('new/criar_plantas', {Lt: lotes, message:"Não há lotes disponiveis para processar", type:"alert alert-dange"})
     } else {
-      return res.render('cadastrar_movimento_plantas', {Lt: lotes, message:"Lotes disponiveis para processamento", type:"sucess"})
+      return res.render('new/criar_plantas', {Lt: lotes, message:"Lotes disponiveis para processamento", type:"alert alert-success"})
     }
   } catch (error) {
-    return res.render('cadastrar_movimento_plantas', {Lt: lotes, message:"Erro ao processar", type:"danger"})
+    return res.render('new/criar_plantas', {Lt: lotes, message:"Erro ao processar", type:"alert alert-dange"})
   }
 })
 app.post('/plantas',async(req,res)=>{
@@ -1063,7 +1068,7 @@ app.post('/plantas',async(req,res)=>{
   const idlote = req.body.lote
   try {
     if (!req.body.lote ||!req.body.localidade|| !req.body.qtdfolhas) {
-      return res.render('cadastrar_movimento_plantas', {Lt: lotes, message:"Preencha todos so campos!", type:"danger"})
+      return res.render('new/criar_plantas', {Lt: lotes, message:"Preencha todos so campos!", type:"alert alert-dange"})
     } else {
        {
        await Movifluxolote.create({
@@ -1078,13 +1083,13 @@ app.post('/plantas',async(req,res)=>{
         )
         await Lote.findAll({where:{localidade: "loteplantas"}})
         .then((lote)=>{
-        return res.render('cadastrar_movimento_plantas', {Lt: lote, message:"Cadastro de movimento lotes registrado com sucesso!", type:"sucess"})
+        return res.render('new/criar_plantass', {Lt: lote, message:"Cadastro de movimento lotes registrado com sucesso!", type:"alert alert-success"})
       });
       }
       
     }
   } catch (error) {
-    return res.render('cadastrar_movimento_plantas', {Lt: lotes, message:"Erro ao registrar dados", type:"danger"})
+    return res.render('new/criar_plantas', {Lt: lotes, message:"Erro ao registrar dados", type:"alert alert-dange"})
   }
 })
 //guarda
@@ -1092,12 +1097,12 @@ app.get('/guarda',ensureAuthenticated,async (req,res)=>{
   const lotes =  await Lote.findAll({where:{localidade: "loteguarda"}});
   try {
     if (!lotes || lotes.length === 0) {
-        return res.render('cadastrar_movimento_guarda', {Lt: lotes, message:"Não há lotes disponiveis para processar", type:"danger"})
+        return res.render('new/criar_guarda', {Lt: lotes, message:"Não há lotes disponiveis para processar", type:"alert alert-danger"})
     } else {
-      return res.render('cadastrar_movimento_guarda', {Lt: lotes, message:"Lotes disponiveis para processamento", type:"sucess"})
+      return res.render('new/criar_guarda', {Lt: lotes, message:"Lotes disponiveis para processamento", type:"alert alert-success"})
     }
   } catch (error) {
-    return res.render('cadastrar_movimento_guarda', {Lt: lotes, message:"Erro ao processar", type:"danger"})
+    return res.render('new/criar_guarda', {Lt: lotes, message:"Erro ao processar", type:"alert alert-danger"})
   }
 })
 app.post('/guarda',async(req,res)=>{
@@ -1105,7 +1110,7 @@ app.post('/guarda',async(req,res)=>{
   const idlote = req.body.lote
   try {
     if (!req.body.lote ||!req.body.localidade|| !req.body.qtdfolhas) {
-      return res.render('cadastrar_movimento_guarda', {Lt: lotes, message:"Preencha todos so campos!", type:"danger"})
+      return res.render('new/criar_guarda', {Lt: lotes, message:"Preencha todos so campos!", type:"alert alert-danger"})
     } else {
        {
        await Movifluxolote.create({
@@ -1120,15 +1125,18 @@ app.post('/guarda',async(req,res)=>{
         )
         await Lote.findAll({where:{localidade: "loteguarda"}})
         .then((lote)=>{
-        return res.render('cadastrar_movimento_guarda', {Lt: lote, message:"Cadastro de movimento lotes registrado com sucesso!", type:"sucess"})
+        return res.render('new/criar_guarda', {Lt: lote, message:"Cadastro de movimento lotes registrado com sucesso!", type:"alert alert-success"})
       });
       }
       
     }
   } catch (error) {
-    return res.render('cadastrar_movimento_guarda', {Lt: lotes, message:"Erro ao registrar dados", type:"danger"})
+    return res.render('new/criar_guarda', {Lt: lotes, message:"Erro ao registrar dados", type:"alert alert-danger"})
   }
 })
+
+
+
 //Processamento de lote
 app.get('/producaolotes',ensureAuthenticated, async(req,res)=>{
   const  movimentos = await Movifluxolote.findAll({include: [
@@ -1138,14 +1146,14 @@ app.get('/producaolotes',ensureAuthenticated, async(req,res)=>{
   try {
 
    if (movimentos.length === 0) {
-    return res.render('tabela_processamento_lote',{Movimentos:movimentos,message:"Registros não encontrados",type:"danger"})
+    return res.render('new/tabela_producao_lotes',{Movimentos:movimentos,message:"Registros não encontrados",type:"alert alert-danger"})
    } else {
-    return res.render('tabela_processamento_lote',{Movimentos:movimentos,message:"Registros  encontrados",type:"sucess"})
+    return res.render('new/tabela_producao_lotes',{Movimentos:movimentos,message:"Registros  encontrados",type:"alert alert-success"})
     
    }
 
   } catch (error) {
-    return res.render('tabela_processamento_lote',{Movimentos:movimentos, message:"Erro ao processar",type:"danger"})
+    return res.render('new/tabela_producao_lotes',{Movimentos:movimentos, message:"Erro ao processar",type:"alert alert-danger"})
     
   }
 })
@@ -1157,14 +1165,14 @@ app.get('/movimentoscaixa',ensureAuthenticated, async(req,res)=>{
   try {
 
    if (movimentos.length === 0) {
-    return res.render('tabela_processamento_caixas',{Movimentos:movimentos,message:"Registros não encontrados",type:"danger"})
+    return res.render('new/tabela_caixas',{Movimentos:movimentos,message:"Registros não encontrados",type:"alert alert-danger"})
    } else {
-    return res.render('tabela_processamento_caixas',{Movimentos:movimentos,message:"Registros  encontrados",type:"sucess"})
+    return res.render('new/tabela_caixas',{Movimentos:movimentos,message:"Registros  encontrados",type:"alert alert-success"})
     
    }
 
   } catch (error) {
-    return res.render('tabela_processamento_caixas',{Movimentos:movimentos, message:"Erro ao processar",type:"danger"})
+    return res.render('new/tabela_caixas',{Movimentos:movimentos, message:"Erro ao processar",type:"alert alert-danger"})
     
   }
 })
@@ -1184,21 +1192,24 @@ app.get('/relatoriogeral',ensureAuthenticated, async(req,res)=>{
   try {
 
    if (movimentos.length === 0) {
-    return res.render('tabela_relatorio_unificada',{Movimentos:movimentos,message:"Registros não encontrados",type:"danger"})
+    return res.render('new/tabela_documentos_geral',{Movimentos:movimentos,message:"Registros não encontrados",type:"alert alert-danger"})
    } else {
-    return res.render('tabela_relatorio_unificada',{Movimentos:movimentos,message:"Registros  encontrados",type:"sucess"})
+    return res.render('new/tabela_documentos_geral',{Movimentos:movimentos,message:"Registros  encontrados",type:"alert alert-success"})
     
    }
 
   } catch (error) {
-    return res.render('tabela_relatorio_unificada',{Movimentos:movimentos, message:"Erro ao processar",type:"danger"})
+    return res.render('new/tabela_documentos_geral',{Movimentos:movimentos, message:"Erro ao processar",type:"alert alert-danger"})
     
   }
+})
+app.get('/faturamento',(req,res)=>{
+  res.render('tabela_faturamento',{message:"Consulta esta sendo configurada", type:"alert alert-danger"})
 })
 
 
 //rota dos selects
-app.get('/segundoselect',ensureAuthenticated ,async(req,res)=>{
+app.get('/segundoselect' ,async(req,res)=>{
 
   const id = req.query.id;  // Pega o ID do select1
 
@@ -1211,7 +1222,7 @@ app.get('/segundoselect',ensureAuthenticated ,async(req,res)=>{
 
 });
 
-app.get('/terceiroselect',ensureAuthenticated ,async(req,res)=>{
+app.get('/terceiroselect' ,async(req,res)=>{
 
   const id = req.query.id;  // Pega o ID do select1
 
@@ -1238,7 +1249,7 @@ app.get('/somafolhas/:loteId', ensureAuthenticated, async (req, res) => {
   }
 });
 //rota para excels
-app.get('/baixar-excel', async (req, res) => {
+app.get('/baixar-excel',ensureAuthenticated, async (req, res) => {
   const  relatorios = await DB.Documento.findAll({
     include: [
     {model: DB.vincular,as: 'vinculo'},
@@ -1445,8 +1456,9 @@ app.get('/teste12',async(req,res)=>{
      res.json(documento)
    })
 })
-
-
+app.get('/teste',(req,res)=>{
+  res.render('new/teste')
+})
 
 //config servidor
 app.listen(port, '192.168.0.23', () => {
