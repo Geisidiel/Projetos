@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dcomentos cadastrados</title>
+    <link rel="stylesheet" href="css/root.css">
+    <link rel="stylesheet" href="css/newstyle.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+</head>
+<body>
+    <div class="header">
+        <%- include('../partials/menu'); -%>
+    </div>
+    
+    <div class="container">
+
+      <div class="content_forms_documentos">
+         <% if (message !="") { %>
+          <section id="meuElemento" class=" <%= type  %>">
+            <p><%= message  %></p>
+          </section>
+        <% } %>
+        
+          <form class="form_novo_documento" action="" method="post">
+            
+            <h4>Cadastrar novo documento:</h4>
+            <hr>
+            <div class="div_forms_dc">
+              <div class="col-md-4">
+                <label for="validationCustom04" class="form-label">Cliente:</label>
+                <select name="clienteId" id="select1" class="form-select"    >
+                  <option value="">Selecione</option>
+                  <% Cl.forEach(cliente => { %>
+                    <option value="<%=cliente.id %>"><%= cliente.cliente %></option>
+                  <% }); %>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label for="validationCustom04" class="form-label">Categoria:</label>
+                <select name="categoriaId" id="select2" class="form-select" >
+                  <option value="">Selecione</option>
+    
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label for="validationCustom04" class="form-label">Subcategoria:</label>
+                <select name="subcategoriaId" id="select3" class="form-select"  >
+                    <option value="">Selecione</option>
+                                
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="validationCustom04" class="form-label">Lote:</label>
+                <select name="lote" class="form-select" id="validationCustom04" required>
+                  <% Lt.forEach(lote => { %>
+                    <option value="<%=lote.id %>"><%= lote.n_lote %></option>
+                  <% }); %>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="validationCustom04" class="form-label">Tipo documento:</label>
+                <select id="meuSelect" name="tipodocumento" class="form-select"  required>
+                  <% Td.forEach(tipod => { %>
+                    <option value="<%=tipod.tipodocumento %>"><%= tipod.tipodocumento %></option>
+                <% }); %>
+                </select>
+              </div>
+      
+              <div class="col-md-3">
+                <label for="validationCustom05" class="form-label">Nª processo:</label>
+                <input id="meuInput" name="processo"  type="text" class="form-control" id="validationCustomProd" >
+              </div>
+              <div class="col-md-2">
+                <label for="validationCustom05" class="form-label">Volume:</label>
+                <input id="meuInput" name="volume" type="text" class="form-control" >
+              </div>
+              <div class="col-md-2">
+                <label for="validationCustom05" class="form-label">Qtd folhas:</label>
+                <input name="qtdfolhas" type="text" class="form-control" id="validationCustomProd" >
+              </div>
+              
+              <div class="col-md-10">
+                <label for="validationCustom05" class="form-label">Descrição:</label>
+                <textarea class="form-control" id="descricao" name="descricao"></textarea>
+              </div>
+
+            </div>
+              
+              <div class="col-md-18 div_btn_vincular">
+                <button type="submit" class="btn btn-success">Salvar</button>
+                <a class="btn btn-danger" href="/">Cancelar</a>
+              </div>
+  
+        </form>
+        
+      </div>
+      
+    </div>
+    
+</body>
+</html>
+<script src="js/automation.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js" integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D" crossorigin="anonymous"></script>

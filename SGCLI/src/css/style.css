@@ -220,7 +220,7 @@ color: var(--bs-white);
 
 /* Estilo do cabeçalho da tabela */
 .tabela_documento  thead {
-  background-color: var(--bs-gray-900);
+  background-color: var(--bs-gray-600);
   color: var(--bs-white);
 }
 .tabela_documento  thead  th{
@@ -376,3 +376,4 @@ border-radius: 10px;
  .div_relatorio:hover{
   background-color: var(--bs-gray-600);
  }
+ 
