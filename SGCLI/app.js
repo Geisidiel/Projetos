@@ -1203,8 +1203,9 @@ app.get('/relatoriogeral',ensureAuthenticated, async(req,res)=>{
     
   }
 })
+//Faturamento
 app.get('/faturamento',(req,res)=>{
-  res.render('tabela_faturamento',{message:"Consulta esta sendo configurada", type:"alert alert-danger"})
+  res.render('new/faturamento',{message:"Consulta esta sendo configurada", type:"alert alert-danger"})
 })
 
 
@@ -1461,7 +1462,7 @@ app.get('/teste',(req,res)=>{
 })
 
 //config servidor
-app.listen(port, '192.168.0.23', () => {
+app.listen(port, '192.168.216.51', () => {
   console.log(`Server running at http://0.0.0.0:${port}/`);
 });
 
