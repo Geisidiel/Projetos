@@ -94,15 +94,12 @@ span a{
 .div_result-faturamento{
   margin-top: 3%;
 }
-.div_result-faturamento label{
+.div_result-faturamento p{
   color: var(--bs-gray);
   font: bolder;
+  text-align: left;
 }
-.div_result-faturamento span{
-  display: flex;
-  padding-top: 5%;
-  
-}
+
 .btn-btn{
   margin-top: 3%;
 }

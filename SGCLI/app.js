@@ -1120,6 +1120,90 @@ app.post('/guarda',async(req,res)=>{
           userId: req.user.id
         });
         await Lote.update(
+          { localidade: 'loteindexado' }, // <<< aqui você define o que quer alterar
+          { where: { id:idlote} }     // <<< ou use { numero: n_lote } se for pelo número
+        )
+        await Lote.findAll({where:{localidade: "loteguarda"}})
+        .then((lote)=>{
+        return res.render('new/criar_guarda', {Lt: lote, message:"Cadastro de movimento lotes registrado com sucesso!", type:"alert alert-success"})
+      });
+      }
+      
+    }
+  } catch (error) {
+    return res.render('new/criar_guarda', {Lt: lotes, message:"Erro ao registrar dados", type:"alert alert-danger"})
+  }
+})
+//indexação
+app.get('/indexacao',ensureAuthenticated,async (req,res)=>{
+  const lotes =  await Lote.findAll({where:{localidade: "loteindexado"}});
+  try {
+    if (!lotes || lotes.length === 0) {
+        return res.render('new/criar_indexacao', {Lt: lotes, message:"Não há lotes disponiveis para processar", type:"alert alert-danger"})
+    } else {
+      return res.render('new/criar_indexacao', {Lt: lotes, message:"Lotes disponiveis para processamento", type:"alert alert-success"})
+    }
+  } catch (error) {
+    return res.render('new/criar_indexacao', {Lt: lotes, message:"Erro ao processar", type:"alert alert-danger"})
+  }
+})
+app.post('/indexacao',async(req,res)=>{
+  const lotes =  await Lote.findAll({where:{localidade: "loteguarda"}});
+  const idlote = req.body.lote
+  try {
+    if (!req.body.lote ||!req.body.localidade|| !req.body.qtdfolhas) {
+      return res.render('new/criar_indexacao', {Lt: lotes, message:"Preencha todos so campos!", type:"alert alert-danger"})
+    } else {
+       {
+       await Movifluxolote.create({
+        n_loteId: req.body.lote,
+          localidade: req.body.localidade,
+          qtdfolhas: req.body.qtdfolhas,
+          userId: req.user.id
+        });
+        await Lote.update(
+          { localidade: 'loteconferido' }, // <<< aqui você define o que quer alterar
+          { where: { id:idlote} }     // <<< ou use { numero: n_lote } se for pelo número
+        )
+        await Lote.findAll({where:{localidade: "loteguarda"}})
+        .then((lote)=>{
+        return res.render('new/criar_indexacao', {Lt: lote, message:"Cadastro de movimento lotes registrado com sucesso!", type:"alert alert-success"})
+      });
+      }
+      
+    }
+  } catch (error) {
+    return res.render('new/criar_indexacao', {Lt: lotes, message:"Erro ao registrar dados", type:"alert alert-danger"})
+  }
+})
+//conferencia
+app.get('/conferencia',ensureAuthenticated,async (req,res)=>{
+  const lotes =  await Lote.findAll({where:{localidade: "loteconferido"}});
+  try {
+    if (!lotes || lotes.length === 0) {
+        return res.render('new/criar_guarda', {Lt: lotes, message:"Não há lotes disponiveis para processar", type:"alert alert-danger"})
+    } else {
+      return res.render('new/criar_guarda', {Lt: lotes, message:"Lotes disponiveis para processamento", type:"alert alert-success"})
+    }
+  } catch (error) {
+    return res.render('new/criar_guarda', {Lt: lotes, message:"Erro ao processar", type:"alert alert-danger"})
+  }
+})
+app.post('/conferencia',async(req,res)=>{
+  const lotes =  await Lote.findAll({where:{localidade: "loteconferido"}});
+  const idlote = req.body.lote
+  try {
+    if (!req.body.lote ||!req.body.localidade|| !req.body.qtdfolhas) {
+      return res.render('new/criar_guarda', {Lt: lotes, message:"Preencha todos so campos!", type:"alert alert-danger"})
+    } else {
+       {
+       await Movifluxolote.create({
+        n_loteId: req.body.lote,
+          localidade: req.body.localidade,
+          qtdfolhas: req.body.qtdfolhas,
+          userId: req.user.id
+        });
+        await Lote.update(
           { localidade: 'lotefinalizado' }, // <<< aqui você define o que quer alterar
           { where: { id:idlote} }     // <<< ou use { numero: n_lote } se for pelo número
         )
@@ -1204,7 +1288,7 @@ app.get('/relatoriogeral',ensureAuthenticated, async(req,res)=>{
   }
 })
 //Faturamento
-app.get('/faturamento',(req,res)=>{
+app.get('/faturamento',ensureAuthenticated, async(req,res)=>{
   res.render('new/faturamento',{message:"Consulta esta sendo configurada", type:"alert alert-danger"})
 })
 
@@ -1462,7 +1546,7 @@ app.get('/teste',(req,res)=>{
 })
 
 //config servidor
-app.listen(port, '192.168.216.51', () => {
+app.listen(port, '192.168.95.207', () => {
   console.log(`Server running at http://0.0.0.0:${port}/`);
 });
 

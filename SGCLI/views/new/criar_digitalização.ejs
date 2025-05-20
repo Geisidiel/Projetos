@@ -28,7 +28,7 @@
             <hr>
               <div class="col-md-19">
                 <label for="validationCustom04" class="form-label">Lote:</label>
-                <select name="unidade" class="form-select" id="validationCustom04" required>
+                <select name="unidade" class="form-select" id="select-lote">
                   <% Lt.forEach(lote => { %>
                     <option value="<%=lote.id %>"><%= lote.n_lote %></option>
                     <% }); %>
