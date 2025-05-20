@@ -21,7 +21,7 @@
             <p><%= message  %></p>
           </section>
         <% } %>
-          <form class="form_vincular" action="" method="post">
+          <form class="form_vincular" action="/recebimento" method="post">
             
 
             <h4>Recebimento caixa:</h4>
@@ -29,7 +29,11 @@
               
               <div class="col-md-18">
                 <label for="validationCustom05" class="form-label">Nª caixa</label>
-                <input name="caixa" type="number" class="form-control" id="validationCustomProd" >
+                <input name="n_rfid" type="text" class="form-control" id="validationCustomProd" >
+              </div>
+              <div class="col-md-18">
+                    <label for="">Movimento:</label>
+                    <input readonly class="form-control" value="caixarecebida" name="localidade" type="text">
               </div>
               
               <div class="col-md-18 div_btn_vincular">

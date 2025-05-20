@@ -21,14 +21,14 @@
             <p><%= message  %></p>
           </section>
         <% } %>
-          <form class="form_vincular" action="" method="post">
+          <form class="form_vincular" action="criarvinculo" method="post">
             
 
             <h4>Vincular lote a uma  caixa:</h4>
             <hr>
               <div class="col-md-19">
                 <label for="validationCustom04" class="form-label">Lote:</label>
-                <select name="unidade" class="form-select" id="validationCustom04" required>
+                <select name="lote" class="form-select" id="validationCustom04" required>
                   <% Lote.forEach(lote => { %>
                     <option value="<%=lote.id %>"><%= lote.n_lote %></option>
                     <% }); %>
@@ -37,15 +37,15 @@
       
               <div class="col-md-18">
                 <label for="validationCustom05" class="form-label">Nª caixa</label>
-                <input name="producao" type="number" class="form-control" id="validationCustomProd" >
+                <input name="n_caixa" type="number" class="form-control" id="validationCustomProd" >
               </div>
               <div class="col-md-18">
                 <label for="validationCustom05" class="form-label">Nª caixa</label>
-                <input name="producao" type="number" class="form-control" id="validationCustomProd" >
+                <input name="n_caixa_secundary" type="number" class="form-control" id="validationCustomProd" >
               </div>
               <div class="col-md-18">
                 <label for="validationCustom05" class="form-label">Nª Rfid</label>
-                <input name="producao" type="number" class="form-control" id="validationCustomProd" >
+                <input name="n_rfid" type="number" class="form-control" id="validationCustomProd" >
               </div>
               <div class="col-md-18 div_btn_vincular">
                 <button type="submit" class="btn btn-success">Salvar</button>
