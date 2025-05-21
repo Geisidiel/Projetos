@@ -48,11 +48,11 @@
                                     <td><%= usuarios.age%></td>
                                     <td><%= usuarios.createdAt %></td>
                                     <td class="divs_btn_tabela">
-                                        <form action="/finalizarlote/ %>" method="post">
-                                            <button class="btn_table_green" type="submit">Editar</button>
+                                        <form  method="post">
+                                            <button  action="/deletelote/<%= usuarios.nome %>" class="btn btn-primary"  type="submit">Editar</button>
                                         </form>
-                                        <form action="/deletelote" method="post">
-                                            <button class="btn_table_red" type="submit">Aprovar</button>
+                                        <form method="post" action="/aprovarusuario/<%= usuarios.id %>">
+                                            <button  class="btn btn-success" type="submit">Aprovar</button>
                                         </form>
                                     </td>
                                 </tr>

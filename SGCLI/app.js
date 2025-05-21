@@ -32,6 +32,7 @@ const { Console } = require('console');
 const movicaixa = require('./Controler/model_movimento_caixas');
 const DB =require('./index/index');
 const ExcelJS = require('exceljs');
+const { Op, fn, col } = require('sequelize');
 
 
 //Configs
@@ -134,7 +135,28 @@ app.get('/logout', (req, res) => {
 app.get('/novousuario',(req,res)=>{
   res.render('new/criar_usuario' , { message: "", type: "danger" })
 })
+app.post('/aprovarusuario/:id',async(req,res)=>{
 
+   const { id } = req.params;
+    const user = await Usuario.findAll()
+  try {
+   const atualizar =  await Usuario.update(
+      { age: '1' },
+      { where: { id } }
+    );
+    if (atualizar) {
+      return res.redirect('/usuarios')
+    } else {
+      return res.render('new/tabela_usuario',{Usuarios:user,message:"Não foi possivel atualizar usuario", type:"alert alert-danger"})
+      
+    }
+  } catch (error) {
+   
+      return res.render('new/tabela_usuario',{Usuarios:user,message:"Erro ao atualizar o usuario", type:"alert alert-danger"})
+
+  }
+   
+})
 app.post('/novousuario', async (req, res) => {
   const { nome, sobrenome, senha, cpf } = req.body;
 
@@ -186,11 +208,11 @@ app.get('/usuarios',ensureAuthenticated  ,async(req,res)=>{
     if(user){
      return res.render('new/tabela_usuario',{Usuarios:user,message:"Registros carregados com sucesso", type:"alert alert-success"})
     }else{
-      return res.render('tabela_usuarios',{Usuarios:user,message:"Nãohá usuarios cadastrados", type:"alert alert-danger"})
+      return res.render('new/tabela_usuari',{Usuarios:user,message:"Nãohá usuarios cadastrados", type:"alert alert-danger"})
     }
   
   } catch (error) {
-    return res.render('tabela_usuarios',{Usuarios:user,message:"Erro ao pesquisar usuarios", type:"alert alert-danger"})
+    return res.render('new/tabela_usuari',{Usuarios:user,message:"Erro ao pesquisar usuarios", type:"alert alert-danger"})
   }
 })
 
@@ -1289,8 +1311,50 @@ app.get('/relatoriogeral',ensureAuthenticated, async(req,res)=>{
 })
 //Faturamento
 app.get('/faturamento',ensureAuthenticated, async(req,res)=>{
-  res.render('new/faturamento',{message:"Consulta esta sendo configurada", type:"alert alert-danger"})
+  res.render('new/faturamento',{message:"", type:""})
 })
+app.post('/consulta', async (req, res) => {
+  const { data_inicio, data_fim } = req.body;
+
+  if (!data_inicio || !data_fim) {
+   return res.render('new/faturamento',{message:"O Campo data não pode ser vazio", type:"alert alert-danger"})
+    
+  }
+
+  try {
+     await Movilotes.findAll({
+      attributes: [
+        'localidade',
+        [fn('SUM', col('qtdfolhas')), 'total_folhas']
+      ],
+      where: {
+        createdAt: {
+          [Op.between]: [new Date(data_inicio), new Date(data_fim)]
+        },
+        localidade: {
+          [Op.in]: [
+            'loteclasificado',
+            'lotepreparado',
+            'lotecontrolado',
+            'lotedigitalizado',
+            'loteindexado',
+            'loteplantas',
+            'lotepreparado'
+          
+          ]
+        }
+      },
+      group: ['localidade']
+    })
+    .then((resultado)=>{
+      return res.render('new/faturamento', { Resultado: resultado, data_inicio, data_fim,message:"Registros faturados", type:"alert alert-success" });
+  
+    })
+  } catch (err) {
+    console.error(err);
+   return res.render('new/faturamento',{message:"Erro ao processa", type:"alert alert-danger"})
+  }
+});
 
 
 //rota dos selects
@@ -1541,12 +1605,42 @@ app.get('/teste12',async(req,res)=>{
      res.json(documento)
    })
 })
-app.get('/teste',(req,res)=>{
-  res.render('new/teste')
+app.get('/teste',async(req,res)=>{
+
+    
+  
+    await Movilotes.findAll({
+      attributes: [
+        'localidade',
+        [fn('SUM', col('qtdfolhas')), 'total_folhas']
+      ],
+      where: {
+        createdAt: {
+          [Op.between]: [new Date('2025-05-07'), new Date('2025-05-20')]
+        },
+        localidade: {
+          [Op.in]: [  
+            'loteclassificado',
+            'lotepreparado',
+            'lotecontrolado',
+            'lotedigitalizado',
+            'loteindexado',
+            'loteplantas',
+            'lotepreparado',
+          ]
+        }
+      },
+      group: ['localidade']
+    })
+
+    .then((documento)=>{
+      res.json(documento)
+    })
+  
 })
 
 //config servidor
-app.listen(port, '192.168.95.207', () => {
+app.listen(port, '192.168.213.79', () => {
   console.log(`Server running at http://0.0.0.0:${port}/`);
 });
 

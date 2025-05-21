@@ -106,5 +106,12 @@ span a{
 .div_periodo legend{
   text-align: left;
 }
-
-
+.top h4{
+  color: var(--bs-gray);
+}
+.top table th,td{
+  font-size: 16px;
+}
+.lotecontrolado{
+  color: red;
+}
