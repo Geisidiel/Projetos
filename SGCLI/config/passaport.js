@@ -9,10 +9,19 @@ module.exports = (passport) => {
   }, async (cpf, senha, done) => {
     try {
       const usuario = await Usuario.findOne({ where: { cpf } });
-      if (!usuario) return done(null, false, { message: 'Usuário não encontrado' });
+      if (!usuario) {
+        return done(null, false, { message: 'Usuário não encontrado' });
+      }
+
+      // ⚠️ Verificação da coluna age
+      if (usuario.age !== '1') {
+        return done(null, false, { message: 'Conta ainda não aprovada. Aguarde a liberação do administrador.' });
+      }
 
       const match = await bcrypt.compare(senha, usuario.senha);
-      if (!match) return done(null, false, { message: 'Senha incorreta' });
+      if (!match) {
+        return done(null, false, { message: 'Senha incorreta' });
+      }
 
       return done(null, usuario);
     } catch (err) {
@@ -30,3 +39,4 @@ module.exports = (passport) => {
     }
   });
 };
+

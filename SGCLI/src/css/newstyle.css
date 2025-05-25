@@ -61,6 +61,10 @@
 .div_tabelas h4{
   color: var(--bs-gray);
   text-align: left;
+
+}
+.div_tabelas{
+  margin-bottom: 10%;
 }
 .table-bordered th , td{
   font-size: 11px;
@@ -106,5 +110,16 @@ span a{
 .div_periodo legend{
   text-align: left;
 }
-
-
+.top h4{
+  color: var(--bs-gray);
+}
+.top table th,td{
+  font-size: 11px;
+}
+.lotecontrolado{
+  border: solid red 2px;
+  margin-bottom: 10%;
+}
+.footer{
+  width: 100%;
+}

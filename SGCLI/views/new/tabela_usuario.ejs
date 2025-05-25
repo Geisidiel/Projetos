@@ -44,17 +44,18 @@
                           <td><%= usuarios.createdAt %></td>
                           <td class="divs_btn_tabela">
                             
-                              <a class="btn btn-primary" href="/finalizarlote/ %>">Editar</a>
+                          <a class="btn btn-primary" href="/atualizarusuario/<%= usuarios.id %>">Editar</a>
                             
-                        <form action="/deletelote" method="post">
+                            <form action="/aprovarusuario/<%= usuarios.id %>" method="post">
                               <button class="btn btn-success" type="submit">Aprovar</button>
                             </form>
-                            </td>
-                         </tr>
+                          </td>
+                        </tr>
                 <% }); %>
             </tbody>
         </table>
         </div>
+
         </div>
     </div>
     
