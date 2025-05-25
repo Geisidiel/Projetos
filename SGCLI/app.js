@@ -1640,7 +1640,7 @@ app.get('/teste',async(req,res)=>{
 })
 
 //config servidor
-app.listen(port, '192.168.213.79', () => {
+app.listen(port, '192.168.0.23', () => {
   console.log(`Server running at http://0.0.0.0:${port}/`);
 });
 

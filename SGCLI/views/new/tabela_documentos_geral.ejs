@@ -20,62 +20,63 @@
           <section id="meuElemento" class=" <%= type  %>">
             <p><%= message  %></p>
           </section>
-        <% } %>
+          <% } %>
 
           <span><h4>Base geral de cadastro de lotes e vinculos registrados:</h4>
           <a class="btn btn-primary"  href="/baixar-excel">Relatorio</a></span>
           <hr>
          <div class="table-scrollable">
-      <table class="table table-bordered table-hover">
-    <thead class="table-dark">
-      <tr>
-        
-                            <th scope="col">CLIENTE</th>
-                            <th scope="col">CATEGORIA</th>
-                            <th scope="col">SUCATEGORIA</th>
-                            <th scope="col">LOTE</th>
-                            <th scope="col">DOCUMENTO</th>
-                            <th scope="col">PROCESSO</th>
-                            <th scope="col">VOLUME</th>
-                            <th scope="col">DESCRIÇÃO</th>
-                            <th scope="col">Nº RFID</th>
-                            <th scope="col">Nº CAIXA </th>
-                            <th scope="col">Nº CAIXA </th>
-                            <th scope="col">USUARIO</th>
-                            <th scope="col">AÇOES</th>
-      </tr>
-    </thead>
-    <tbody>
-        <% Movimentos.forEach(relatorio => { %>
-                                <tr>
-                                    <td><%= relatorio.cliente.cliente %></td>
-                                    <td><%= relatorio.categorium.categoria %></td>
-                                    <td><%= relatorio.subcategorium.subcategoria %></td>
-                                    <td><%= relatorio.Lote.n_lote %></td>
-                                    <td><%= relatorio.tipodocumento %></td>
-                                    <td><%= relatorio.processo %></td>
-                                    <td><%= relatorio.volume %></td>
-                                    <td><%= relatorio.descricao %></td>
-                                    <td><%= relatorio.vinculo ? relatorio.vinculo.n_rfid : '—' %></td>
-                                    <td><%= relatorio.vinculo ? relatorio.vinculo.n_caixa : '—' %></td>
-                                    <td><%= relatorio.vinculo ? relatorio.vinculo.n_caixa_secundary : '—' %></td>
-                                    <td><%= relatorio.User.nome %></td>
-                                    <td class="divs_btn_tabela">
-                                      <a class="btn btn-primary" href="/:<%=relatorio.id %>">Editar</a>
-                                      <form action="/deletelote" method="post">
-                                        <button class="btn btn-danger" type="submit">Deletar</button>
-                                      </form>
-                                    </td>
-                                    
-                                </tr>
-                        <% }); %>        
-      
-    </tbody>
-  </table>
-</div>
+            <table class="table table-bordered table-hover">
+              <thead class="table-dark">
+                <tr>
+                  
+                                      <th scope="col">CLIENTE</th>
+                                      <th scope="col">CATEGORIA</th>
+                                      <th scope="col">SUCATEGORIA</th>
+                                      <th scope="col">LOTE</th>
+                                      <th scope="col">DOCUMENTO</th>
+                                      <th scope="col">PROCESSO</th>
+                                      <th scope="col">VOLUME</th>
+                                      <th scope="col">DESCRIÇÃO</th>
+                                      <th scope="col">Nº RFID</th>
+                                      <th scope="col">Nº CAIXA </th>
+                                      <th scope="col">Nº CAIXA </th>
+                                      <th scope="col">USUARIO</th>
+                                      <th scope="col">AÇOES</th>
+                </tr>
+              </thead>
+              <tbody>
+                  <% Movimentos.forEach(relatorio => { %>
+                                          <tr>
+                                              <td><%= relatorio.cliente.cliente %></td>
+                                              <td><%= relatorio.categorium.categoria %></td>
+                                              <td><%= relatorio.subcategorium.subcategoria %></td>
+                                              <td><%= relatorio.Lote.n_lote %></td>
+                                              <td><%= relatorio.tipodocumento %></td>
+                                              <td><%= relatorio.processo %></td>
+                                              <td><%= relatorio.volume %></td>
+                                              <td><%= relatorio.descricao %></td>
+                                              <td><%= relatorio.vinculo ? relatorio.vinculo.n_rfid : '—' %></td>
+                                              <td><%= relatorio.vinculo ? relatorio.vinculo.n_caixa : '—' %></td>
+                                              <td><%= relatorio.vinculo ? relatorio.vinculo.n_caixa_secundary : '—' %></td>
+                                              <td><%= relatorio.User.nome %></td>
+                                              <td class="divs_btn_tabela">
+                                                <a class="btn btn-primary" href="/:<%=relatorio.id %>">Editar</a>
+                                                <form action="/deletelote" method="post">
+                                                  <button class="btn btn-danger" type="submit">Deletar</button>
+                                                </form>
+                                              </td>
+                                              
+                                          </tr>
+                                  <% }); %>        
+                
+              </tbody>
+            </table>
+         </div>
 
         </div>
     </div>
+  
     
 </body>
 </html>
