@@ -9,6 +9,16 @@
       width: 78%;
       margin: 0 auto;
     }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      padding: 8px 12px;
+      text-align: left;
+      border: 1px solid #ccc;
+    }
   </style>
 </head>
 <body>
@@ -19,7 +29,7 @@
     <input type="text" id="pasta" placeholder="Ex: C:\\documentos\\usuario1" />
 
     <button onclick="listar()">📄 Carregar Arquivos</button>
-    <button onclick="enviar()">✅ Processar</button>
+    <button id="btnProcessar" onclick="enviar()">✅ Processar</button>
 
     <p id="status"></p>
     <p id="tempo"></p>
@@ -30,9 +40,22 @@
     </div>
 
     <h2>📋 Arquivos na pasta:</h2>
-    <table border="1" id="tabelaAntes">
+    <table id="tabelaAntes">
       <thead>
         <tr><th>Arquivo</th><th>Total de Páginas</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <h2>📋 Resultados do Processamento:</h2>
+    <table id="tabelaDepois">
+      <thead>
+        <tr>
+          <th>Arquivo</th>
+          <th>Páginas Antes</th>
+          <th>Páginas Depois</th>
+          <th>Páginas Excluídas</th>
+        </tr>
       </thead>
       <tbody></tbody>
     </table>

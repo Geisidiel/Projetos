@@ -18,6 +18,7 @@ let progresso = {
 };
 
 let processamentoAtivo = false;
+let resultadosGlobais = []; // armazenar resultados do último processamento
 
 app.post('/listar-pdfs', async (req, res) => {
   const { pasta } = req.body;
@@ -59,6 +60,7 @@ app.post('/iniciar-processamento', async (req, res) => {
   };
 
   processamentoAtivo = true;
+  resultadosGlobais = [];
 
   try {
     const arquivos = await fs.readdir(pasta);
@@ -93,6 +95,8 @@ app.post('/iniciar-processamento', async (req, res) => {
       progresso.status = 'finalizado';
       progresso.tempo = ((fim - inicio) / 1000).toFixed(2) + ' segundos';
       processamentoAtivo = false;
+
+      resultadosGlobais = resultados; // guardar para rota resultado
     })();
 
     res.json({ status: 'ok', mensagem: 'Processamento iniciado.' });
@@ -106,6 +110,11 @@ app.post('/iniciar-processamento', async (req, res) => {
 
 app.get('/progresso', (req, res) => {
   res.json(progresso);
+});
+
+// Nova rota para pegar os resultados detalhados
+app.get('/resultado', (req, res) => {
+  res.json({ status: 'ok', resultados: resultadosGlobais });
 });
 
 app.listen(PORT, '0.0.0.0', () => {

@@ -31,11 +31,16 @@ async function listar() {
 }
 
 async function enviar() {
-  const pasta = document.getElementById('pasta').value;
+  const pasta = document.getElementById('pasta').value.trim();
   const status = document.getElementById('status');
   const tempo = document.getElementById('tempo');
   const barra = document.getElementById('barraProgresso');
   const percentual = document.getElementById('percentualProgresso');
+
+  if (!pasta) {
+    alert('Informe a pasta antes de iniciar o processamento.');
+    return;
+  }
 
   status.textContent = '⏳ Iniciando...';
   tempo.textContent = '';
@@ -72,6 +77,25 @@ async function enviar() {
       percentual.textContent = '100%';
       status.textContent = '✅ Processamento finalizado!';
       tempo.textContent = `⏱ Tempo total: ${prog.tempo}`;
+
+      // Buscar e mostrar resultados detalhados
+      const resResultados = await fetch('/resultado');
+      const dadosResultados = await resResultados.json();
+
+      if (dadosResultados.status === 'ok') {
+        const tbody = document.querySelector('#tabelaDepois tbody');
+        tbody.innerHTML = ''; // limpa tabela
+
+        dadosResultados.resultados.forEach(({ nome, paginasAntes, paginasDepois, excluidas }) => {
+          const linha = `<tr>
+            <td>${nome}</td>
+            <td>${paginasAntes}</td>
+            <td>${paginasDepois}</td>
+            <td>${excluidas}</td>
+          </tr>`;
+          tbody.innerHTML += linha;
+        });
+      }
     }
 
     if (prog.status === 'erro') {
